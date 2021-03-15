@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+      </head>
+
+<body>
+    <div>
+        <table class="table" style="background-color:#fff">
+            <thead style="color:#fff; background-color:#0D93C9;">
+                <tr>
+                    <th data-visible="true">Key ID</th>
+                    <th>Category</th>
+                    <th>Description</th>
+                    <th style="text-align:right">Quantity</th>
+                </tr>
+            </thead>
+            <tbody class="table table-striped">
+                {% for qty in data %}
+                    <tr style="background-color: rgb(231, 228, 228);">
+                        <td>{{ qty.key_id }}</td>
+                        <td>{{ qty.category }}</td>
+                        <td>{{ qty.key_description }}</td>
+                        <td style="text-align:right">{{ qty.quantity }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

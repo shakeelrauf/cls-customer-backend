@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="multipart/related;">
+        <style>
+            .div {width: 925px; height: 391px; border: 1px solid #CFCFCF;}
+            .indiv {margin-left: 35px; margin-top: 30px;}
+            label {display: inline-block;
+                    width: 140px;
+                    text-align: left;
+                    color: #5C5C5C;
+                    font-size: 12px;
+                    }
+             label.lab {
+                display: inline-block;
+                    width: 15px;
+                    text-align: left;
+                    color: #5C5C5C;
+                    font-size: 12px;
+             }
+             p {color: #5C5C5C;
+                font-size: 12px;
+             }
+             span{ font-size: 12px;}
+             h1{ font-size: 14px;}
+             .img {width: 121px; height: 35px;}
+        </style>
+    </head>
+    <body>
+        <div class="div">
+            <div class="indiv">
+                <h1 style="text-align: left;">Hi, {{full_name}}</h1>
+                <p>Your Calgary services of <b>{{account_number}}</b> expires at <b>{{expire_date}}</b>></p>
+                <p>Subscribe before services is expired to continue these services.</p>
+                <div>
+                    <p>Account Details are:</p>
+
+                    <label>Account Number</label>
+                    <span>: {{account_number}}</span><br>
+
+                    <label>First Name</label>
+                    <span>: {{first_name}}</span><br>
+
+                    <label>Last Name</label>
+                    <span>: {{last_name}}</span><br>
+
+                    <label>Phone Number</label>
+                    <span>: {{phone}}</span><br>
+
+                    <label>System Numbers</label>
+                    {% for file_number in file_numbers %}
+                        {% if file_number.location %}
+                            <span>: {{file_number}} - {{location}}</span>,&nbsp&nbsp&nbsp
+                        {% else %}
+                            <span>: {{file_number}}</span>,&nbsp&nbsp&nbsp
+                        {% endif %}
+                    {% endfor %}
+
+                    <label>Account Expire at</label>
+                    <span>: {{expire_date}}</span><br>
+                </div>
+                <p>Please contact for any questions or concerns</p>
+                <p>Thanks and Regards,</p>
+                <img class="img" src="cid:logo.png" alt='logo'>
+                <span></span><br>
+
+                <label class="lab">Tel</label>
+                <span>: 403.250.5698</span><br>
+                <p>dispatch@calgarylockandsafe.com</p>
+            </div>
+        </div>
+    </body>
+</html>

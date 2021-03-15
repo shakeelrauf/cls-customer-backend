@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="multipart/related;">
+        <style>
+            .div {width: 925px; height: 391px; border: 1px solid #CFCFCF;}
+            .indiv {margin-left: 35px; margin-top: 30px;}
+            label {display: inline-block;
+                    width: 140px;
+                    text-align: left;
+                    color: #5C5C5C;
+                    font-size: 12px;
+                    }
+             label.lab {
+                display: inline-block;
+                    width: 15px;
+                    text-align: left;
+                    color: #5C5C5C;
+                    font-size: 12px;
+             }
+             p {color: #5C5C5C;
+                font-size: 12px;
+             }       
+             span{ font-size: 12px;}
+             h1{ font-size: 14px;}
+             .img {width: 121px; height: 35px;}
+        </style>
+    </head>
+    <body>
+        <div class="div">
+            <div class="indiv">
+                <p style="text-align: left;">Hi, {{first_name}} {{last_name}}</p>
+                <p>Thank you for setting up your customer portal with Calgary Lock and Safe</p>
+                <div>
+                    <label>Account Number</label>
+                    <span>: {{account_number}}</span><br>
+
+                    <label>First Name</label>
+                    <span>: {{first_name}}</span><br>
+    
+                    <label>Last Name</label>
+                    <span>: {{last_name}}</span><br>
+    
+                    <label>Phone Number</label>
+                    <span>: {{phone}}</span><br>
+                </div>
+                <p>Please contact for any questions or concerns</p>
+                <p>Thanks and Regards,</p>
+                <img class="img" src="cid:logo.png" alt='logo'>
+                <span></span><br>
+    
+                <label class="lab">Tel</label>
+                <span>: 403.250.5698</span><br>
+                <p>dispatch@calgarylockandsafe.com</p>
+            </div>
+        </div>
+    </body>
+</html>

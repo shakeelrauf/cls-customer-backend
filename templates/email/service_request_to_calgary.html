@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="multipart/related;">
+        <style>
+            .div {width: 925px; height: 391px; border: 1px solid #CFCFCF;}
+            .indiv {margin-left: 35px; margin-top: 30px;}
+            label {display: inline-block;
+                    width: 140px;
+                    text-align: left;
+                    color: #5C5C5C;
+                    font-size: 12px;
+                    }
+             label.lab {
+                display: inline-block;
+                    width: 15px;
+                    text-align: left;
+                    color: #5C5C5C;
+                    font-size: 12px;
+             }
+             p {color: #5C5C5C;
+                font-size: 12px;
+             }
+             span{ font-size: 12px;}
+             h1{ font-size: 14px;}
+             .img {width: 121px; height: 35px;}
+        </style>
+    </head>
+    <body>
+        <div class="div">
+            <div class="indiv">
+                <h1 style="text-align: left;">#{{ cus_no }}</h1>
+                <p>{{ cus_no }} has requested service at following location:</p>
+                <div>
+                    <label>Account Number</label>
+                    <span>: {{cus_no}}</span><br>
+
+                    <label>Location</label>
+                    <span>: {{location}}</span><br>
+
+                    <label>Address</label>
+                    <span>: {{address}}</span><br>
+
+                    <label>Request for</label>
+                    <span>: {{request}}</span><br>
+                </div>
+
+                <img class="img" src="cid:logo.png" alt='logo'>
+                <span></span><br>
+
+                <label class="lab">Tel</label>
+                <span>: 403.250.5698</span><br>
+                <p>dispatch@calgarylockandsafe.com</p>
+            </div>
+        </div>
+    </body>
+</html>

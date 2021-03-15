@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            .indiv {margin-left: 35px; margin-top: 30px; align-items: center;}
+            label {display: inline-block;
+                    width: 140px;
+                    text-align: left;
+                    font-size: 14px;
+                    }
+             label.lab {
+                display: inline-block;
+                    width: 15px;
+                    text-align: left;
+                    font-size: 14px;
+             }
+             p.denied {
+                font-size: 12px;
+                padding-left: 80px;
+             }
+             p.denied1 {
+                font-size: 12px;
+                padding-left: 50px;
+             }
+             .vl {
+                border-left: 1px solid ;
+                height: 35px;
+                margin-left: 10px;
+                padding-right: 15px;
+                }
+                .contact {
+                    padding: 0;
+                    margin: 0;
+                }
+
+             span{ font-size: 12px;}
+             h1{ font-size: 14px;}
+        </style>
+    </head>
+    <body>
+        <div class="div">
+            <div class="indiv">
+                <p>Order Detail:</p>
+                <div>
+                    <label>Date</label>
+                    <span>: {{ date }}</span><br>
+
+                    <label>Company Name</label>
+                    <span>: {{ company }}</span><br>
+                    <label>Phone</label>
+                    <span>: {{ phone }}</span><br>
+                    <label>Address</label>
+                    <span>: {{ address }}</span><br>
+
+                    <label>Email</label>
+                    <span>: {{ email }}</span><br><br>
+
+                    <label>Account order number</label>
+                    <span>: {{ order_number }}</span><br>
+                    <label>Pick up by</label>
+                    <span>: {{ pickup_by }}</span><br>
+
+                    <label>CLS courier</label>
+                    <span>: {{ courier }}</span><br>
+                    <label>Authorized Name</label>
+                    <span>: {{ authorize_name }}</span><br>
+                </div>
+                <p>-------------------------------------------------</p>
+                <p><span class="vl"></span>QTY <span class="vl"></span> Key stamping <span class="vl"></span> Brand<span class="vl"></span></p>
+                <p>-------------------------------------------------</p>
+                {% for key in keys %}
+                    <p><span class="vl"></span>{{key.quantity}} <span class="vl"></span>{{key.key_code}} <span class="vl"></span> {{key.brand}}<span class="vl"></span></p>
+                {% endfor %}
+                <p>-------------------------------------------------</p><br>
+                
+                <p class="contact">If you have any questions, please contact us at:</p>
+                <span>444-358-755</span><br>
+                <span>keyrecords@calagoryandsafe.com</span><br>
+                <span>www.calgoryandsafe.com</span>
+
+            </div>
+        </div>
+    </body>
+</html>

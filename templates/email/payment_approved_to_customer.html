@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            .indiv {margin-left: 35px; margin-top: 30px; align-items: center;}
+            label {display: inline-block;
+                    width: 140px;
+                    text-align: left;
+                    font-size: 12px;
+                    }
+             label.lab {
+                display: inline-block;
+                    width: 15px;
+                    text-align: left;
+                    font-size: 12px;
+             }
+             p.denied {
+                font-size: 12px;
+                padding-left: 80px;
+             }
+             p.denied1 {
+                font-size: 12px;
+                padding-left: 50px;
+             }
+
+             span{ font-size: 12px;}
+             h1{ font-size: 14px;}
+        </style>
+    </head>
+    <body>
+        <div class="div">
+            <div class="indiv">
+                <h1>Calgary Locks & Safe</h1>
+                <p>TRANSATION RECORD</p>
+                <P>-----------------------------------------</P>
+                <P class="denied">APPROVED</P>
+                <p>-----------------------------------------</p>
+                <div>
+                    <label>TYPE</label>
+                    <span> PURCHASE</span><br><br>
+
+                    <label>TRANSACTION ID</label>
+                    <span> {{ transaction_id }} </span><br>
+                    <label>CUSTOMER ID</label>
+                    <span> {{ customer_id }} </span><br>
+                    <label>Customer Number</label>
+                    <span> {{ account_number }}</span><br><br>
+                    <label>INVOICE ID(s)</label>
+                    {% if multiple %}
+                        {% for inv in invoice %}
+                            <span> {{ inv.invoice }} -  $ {{ inv.amount }}</span><br>
+                        {% endfor %}
+                        <br>
+                    {% else %}
+                        <span> {{ invoice }} </span><br><br>
+                    {% endif %}
+
+                    <label>AMOUNT</label>
+                    <span> $ {{ amount }}</span><br><br>
+
+                    <label>CARD NUMBER</label>
+                    <span> XXXX XXXX XXXX {{ card_detail }}</span><br>
+<!--                    <label>ACCOUNT</label>-->
+<!--                    <span> M</span><br><br>-->
+
+                    <label>DATE</label>
+                    <span>{{ date }}</span><br>
+<!--                    <label>REF</label>-->
+<!--                    <span>544124141545 M</span><br>-->
+<!--                    <label>AUTH CODE</label>-->
+<!--                    <span>541545 E</span><br><br>-->
+                </div>
+                <p>-----------------------------------------</p>
+                <p class="denied1">APPROVED - THANK YOU</p>
+                <p>-----------------------------------------</p>
+            </div>
+        </div>
+    </body>
+</html>

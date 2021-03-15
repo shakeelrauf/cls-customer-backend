@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+      </head>
+
+<body>
+    <div id='invoice'>
+        <div class='row'>
+            <div class='col-lg-6'>
+                <p style="text-align:left;">
+                    <span style="font-size:2.25rem; font-weight:500; color:#5C5C5C;">Billed To:</span><br></br>
+                    <span style="font-size:2.25rem; font-weight:500">{{ name }}</span><br></br>
+                    <p style="font-size:1.8rem; font-weight:500; color:#5C5C5C; width:202px;">{{ address }}</p>
+                    <span style="font-size:2.25rem; font-weight:500">Customer# : {{ cus_no }}</span><br></br>
+                </p>
+            </div>
+            <div class='col-lg-6'>
+                <p style="text-align:right;">
+                    <span style="font-size:2.87rem; font-weight:500;">Invoice</span><br></br>
+                    <span style="font-size:2.25rem; font-weight:500"> #{{ invoice }}</span><br></br>
+                    <span style="font-size:2rem; font-weight:500">{{ invoice_date }}</span>
+                </p>
+            </div>
+        </div>
+        <table class="table" style="background-color:#fff">
+            <thead style="color:#fff; background-color:#0D93C9;">
+                <tr>
+                    <th data-visible="true">Description</th>
+                    <th>QTY</th>
+                    <th>Each</th>
+                    <th style="text-align:right">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in data %}
+                <tr>
+                    <td>{{i.desc}}</td>
+                    <td>{{ i.quantity }}</td>
+                    <td>$ {{ i.price }}</td>
+                    <td style="text-align:right">$ {{ i.amount }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tr>
+                <td colspan='4'>
+                    <div class='row'>
+                        <div class='col-lg-6'>
+                            <p style="cursor:pointer; color:#009ED6;">Term and Conditions</p>
+                        </div>
+                        <div class='col-lg-6'>
+                            <p style="text-align:right">Sub Total : ${{ sub_total }}<br></br>
+                                GST(2235785) : ${{ gst | floatformat:2 }}<br></br>
+                                Total : ${{ total }}<br></br>
+                                <span style="font-weight:500">Amount owning : ${{ total }}</span>
+                            </p>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class='row'>
+        <div class='col-lg-6'>
+            <img style="width:30%" alt="logo" src={{logo}}><br></br>
+            www.calgarylockandsafe.com
+        </div>
+    </div>
+</body>
+</html>

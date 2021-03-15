@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+<div class="container" style="margin-top:20px;">
+    <table class="table" style="background-color:#fff">
+        <thead style="color:#fff; background-color:#0D93C9;">
+        <tr>
+            <th data-visible="true">Location</th>
+            <th>Address</th>
+            <th style="text-align:right">Amount</th>
+        </tr>
+        </thead>
+        <br>
+        {% for d in data %}
+            <tbody>
+                <tr style="background-color: rgb(231, 228, 228);">
+                    <td>{{ d.location }}</td>
+                    <td>{{ d.address }}</td>
+                    <td style="text-align:right">$ {{ d.amount }}</td>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr style="font-weight: bold;">
+                    <td>Invoice Number</td>
+                    <td>Amount</td>
+                </tr>
+                {% for inv in d.list_of_invoice %}
+                    <tr>
+                        <td>{{ inv.invoice }}</td>
+                        <td>$ {{ inv.amount }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        {% endfor %}
+    </table>
+</div>
+<div class='row'>
+        <div class='col-lg-6'>
+            <img style="width:30%" alt="logo" src={{logo}}><br></br>
+            www.calgarylockandsafe.com
+        </div>
+    </div>
+</body>
+</html>
