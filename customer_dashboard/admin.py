@@ -75,9 +75,9 @@ class AccountNumberAdmin(admin.ModelAdmin):
 
 
 class FileNumberAdmin(admin.ModelAdmin):
-    list_display = ['account', 'file_number', 'location']
+    list_display = ['account', 'file_number', 'location', 'system_name']
 
-    search_fields = ('account__account_number', 'file_number', 'location')
+    search_fields = ('account__account_number', 'file_number', 'location', 'system_name')
 
     ordering = ('account',)
 

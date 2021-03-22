@@ -11,13 +11,7 @@ logger = logging.getLogger(__name__)
 # get cursor
 def connect_to_server():
     try:
-        conn = pyodbc.connect(
-            Driver=database['OPTIONS']['driver'],
-            Server=database['HOST'],
-            Database=database['NAME'],
-            USER=database['USER'],
-            PASSWORD=database['PASSWORD']
-        )
+        conn = pyodbc.connect('DRIVER={'+database['OPTIONS']['driver']+'};SERVER='+database['HOST']+';DATABASE='+database['NAME']+';UID='+database['USER']+';PWD='+ database['PASSWORD'])
     except Exception as e:
         print('Exception :', e)
     else:
@@ -36,7 +30,7 @@ def get_company_details(cus_no):
             if cust_res:
                 data_dict['cus_no'] = cust_res[0]
                 data_dict['last_name'] = cust_res[1]
-                query = f"""SELECT LocName, Add1 FROM Location WHERE CustNo='{cus_no}'"""
+                query = f"""SELECT LocName, Add1, LocNo,CustNo FROM Location WHERE CustNo='{cus_no}'"""
                 res = cursor.execute(query)
                 if res:
                     ret_data = res.fetchall()
@@ -45,7 +39,9 @@ def get_company_details(cus_no):
                     for d in ret_data:
                         data.append({
                             'location': d[0],
-                            'address': d[1]
+                            'address': d[1],
+                            'location_no': d[2],
+                            'customer_no': d[3]
                         })
                     data_dict['data'] = data
                     return data_dict
@@ -57,8 +53,31 @@ def get_company_details(cus_no):
     else:
         raise ConnectionError
 
+#update data for company API
+
+def update_company_details(custNo,LocNo,data):
+    location = data['location']
+    address = data['address']
+    con = connect_to_server()
+    if con:
+        try:
+            cursor = con.cursor()
+            data_dict = {}
+            update_loc_query = f"""UPDATE Location SET LocName='{location}', Add1='{address}' WHERE  CustNo='{custNo}' AND LocNo='{LocNo}'"""
+            update_loc_res = cursor.execute(update_loc_query)
+            cursor.commit()
+            loc_query = f"""SELECT LocName,Add1 from Location WHERE CustNo='{custNo}' AND LocNo='{LocNo}'"""
+            loc_res = cursor.execute(loc_query).fetchone()
+            con.close()
+            return loc_res
+        except Exception as e:
+            logger.error('%s', e)
+            raise False
+    else:
+        raise ConnectionError
 
 # get data for accounting API
+import pdb
 def get_accounting(cus_no):
     con = connect_to_server()
     if con:
@@ -82,8 +101,12 @@ def get_accounting(cus_no):
                 if location_data:
                     for d in location_data:
                         # information of total unpaid amount
-                        invoice_query = f"""SELECT SUM([Invoice Total]) FROM dbo.ViewListInvoices WHERE Customer='{cus_no}' 
-                                            AND Location='{d[0]}' AND [Paid Off Date] IS NULL"""
+                        
+                        #invoice_query = f"""SELECT SUM(CAST((Sales.AmtCharge+Sales.AmtCash+Sales.AmtCheck+Sales.AmtCreditC-Sales.AmtChng) AS DECIMAL(12,2))) FROM Sales  LEFT JOIN Receivab ON Sales.CustNo = Receivab.CustNo and Sales.Invoice = Receivab.Invoice WHERE Sales.CustNo='{cus_no}'
+                            #                AND Sales.LocNo='{d[0]}' AND Receivab.PaidOff IS NULL"""
+                        invoice_query = f"""SELECT SUM(CAST((InvAmt - Paid) AS DECIMAL(12,2)))  FROM Receivab WHERE LocNo='{d[0]}' AND CustNo='{cus_no}'"""
+                        #invoice_query = f"""SELECT SUM([Invoice Total]) FROM dbo.ViewListInvoices WHERE Customer='{cus_no}' 
+                                          #  AND Location='{d[0]}' AND [Paid Off Date] IS NULL"""
                         amount = cursor.execute(invoice_query).fetchone()[0]
                         if amount:
                             data.append({
@@ -94,15 +117,23 @@ def get_accounting(cus_no):
                             })
                 total_amount = 0
                 # calculate total unpaid amount
+
                 for amt in data:
                     total_amount += amt['amount']
                 data_dict['total_amount'] = total_amount
+                #dues_query = f"""SELECT
+                  #      SUM(CASE WHEN DATEDIFF(day,[Invoice Date], GETDATE())<=30 THEN [Invoice Total] ELSE 0 END),
+                   #     SUM(CASE WHEN DATEDIFF(day,[Invoice Date], GETDATE())>30 AND DATEDIFF(day,[Invoice Date], GETDATE())<=60 THEN [Invoice Total] ELSE 0 END),
+                    #    SUM(CASE WHEN DATEDIFF(day,[Invoice Date], GETDATE())>60 THEN [Invoice Total] ELSE 0 END)
+                     #   FROM ViewListInvoices
+                      #  WHERE Customer='{cus_no}' AND [Paid Off Date] IS NULL"""
+               
                 dues_query = f"""SELECT
-                        SUM(CASE WHEN DATEDIFF(day,[Invoice Date], GETDATE())<=30 THEN [Invoice Total] ELSE 0 END),
-                        SUM(CASE WHEN DATEDIFF(day,[Invoice Date], GETDATE())>30 AND DATEDIFF(day,[Invoice Date], GETDATE())<=60 THEN [Invoice Total] ELSE 0 END),
-                        SUM(CASE WHEN DATEDIFF(day,[Invoice Date], GETDATE())>60 THEN [Invoice Total] ELSE 0 END)
-                        FROM ViewListInvoices
-                        WHERE Customer='{cus_no}' AND [Paid Off Date] IS NULL"""
+                        SUM(CASE WHEN DATEDIFF(day,CONVERT(datetime,(Period+'01')), GETDATE())<=30 THEN CAST((InvAmt - Period) AS DECIMAL(12,2)) ELSE 0 END),
+                        SUM(CASE WHEN DATEDIFF(day,CONVERT(datetime,(Period+'01')), GETDATE())>30 AND DATEDIFF(day,CONVERT(datetime,(Period+'01')), GETDATE())<=60 THEN CAST((InvAmt - Period) AS DECIMAL(12,2)) ELSE 0 END),
+                        SUM(CASE WHEN DATEDIFF(day,CONVERT(datetime,(Period+'01')), GETDATE())>60 THEN CAST((InvAmt -  Period) AS DECIMAL(12,2)) ELSE 0 END)
+                        FROM Receivab 
+                        WHERE CustNo='{cus_no}' """    
                 dues = cursor.execute(dues_query).fetchone()
                 data_dict['over_30'] = dues[0]
                 data_dict['over_60'] = dues[1]
@@ -125,9 +156,11 @@ def get_invoice_list(cus_no, loc_no):
     if con:
         try:
             cursor = con.cursor()
-            query = f"""SELECT Invoice, [Invoice Date], [Invoice Amount], Tax, [Invoice Total] FROM dbo.ViewListInvoices 
-                        WHERE Customer='{cus_no}' AND Location='{loc_no}' AND [Paid Off Date] IS NULL AND 
-                        [Invoice Total] > 0"""
+            #query = f"""SELECT Sales.Invoice, Sales.InvDate, CAST(Sales.InvAmount AS DECIMAL(12,2)), CAST((Sales.AmtCharge+Sales.AmtCash+Sales.AmtCheck+Sales.AmtCreditC-Sales.AmtChng - Sales.InvAmount) AS DECIMAL(12,2)), CAST((Sales.AmtCharge+Sales.AmtCash+Sales.AmtCheck+Sales.AmtCreditC-Sales.AmtChng) AS DECIMAL(12,2)) FROM Sales 
+             #           LEFT JOIN Receivab ON Sales.CustNo = Receivab.CustNo and Sales.Invoice = Receivab.Invoice
+              #          WHERE Sales.CustNo='{cus_no}' AND Sales.LocNo='{loc_no}' AND Receivab.PaidOff IS NULL AND 
+               #         CAST((Sales.AmtCharge+Sales.AmtCash+Sales.AmtCheck+Sales.AmtCreditC-Sales.AmtChng) AS DECIMAL(12,2)) > 0"""
+            query = f""" SELECT Invoice, InvDate, InvAmt, Paid, InvAmt-Paid FROM Receivab WHERE LocNo='{loc_no}' AND CustNo='{cus_no}' AND (InvAmt-Paid) != '0' """
             invoice_list = cursor.execute(query).fetchall()
             data = []
             for invoice in invoice_list:
@@ -154,8 +187,10 @@ def get_invoice_for_query(cus_no, loc_no):
     if con:
         try:
             cursor = con.cursor()
-            query = f"""SELECT Invoice FROM dbo.ViewListInvoices WHERE Customer='{cus_no}' AND Location='{loc_no}' 
-                        AND [Paid Off Date] IS NULL AND [Invoice Total] > 0"""
+            query = f"""SELECT Sales.Invoice FROM Sales
+                        LEFT JOIN Receivab ON Sales.CustNo = Receivab.CustNo and Sales.Invoice = Receivab.Invoice
+                        WHERE Sales.CustNo='{cus_no}' AND Sales.LocNo='{loc_no}' 
+                        AND Receivab.PaidOff IS NULL AND CAST((Sales.AmtCharge+Sales.AmtCash+Sales.AmtCheck+Sales.AmtCreditC-Sales.AmtChng) AS DECIMAL(12,2)) > 0"""
             invoice_list = cursor.execute(query).fetchall()
             data = []
             for invoice in invoice_list:
@@ -184,8 +219,8 @@ def get_invoice(cus_no, loc_no, invoice):
             location_data = cursor.execute(location_query).fetchone()
             for i, loc in enumerate(('loc_name', 'address')):
                 data_dict[loc] = location_data[i]
-            invoice_query = f"""SELECT Invoice, [Invoice Date], [Invoice Total] FROM dbo.ViewListInvoices WHERE 
-                                Invoice='{invoice}'"""
+            invoice_query = f"""SELECT Sales.Invoice, Sales.InvDate, CAST((Sales.AmtCharge+Sales.AmtCash+Sales.AmtCheck+Sales.AmtCreditC-Sales.AmtChng) AS DECIMAL(12,2)) FROM Sales WHERE 
+                                Sales.Invoice='{invoice}'"""
             invoice_data = cursor.execute(invoice_query).fetchone()
             for j, inv in enumerate(('invoice', 'invoice_date', 'total')):
                 data_dict[inv] = invoice_data[j]
@@ -382,8 +417,10 @@ def get_all_invoice_of_location(cus_no, loc_no):
     if con:
         try:
             cursor = con.cursor()
-            query = f"""SELECT Invoice, [Invoice Total] FROM dbo.ViewListInvoices WHERE Customer='{cus_no}' 
-                        AND Location='{loc_no}' AND [Paid Off Date] IS NULL AND [Invoice Total] > 0"""
+            query = f"""SELECT Sales.Invoice, CAST((Sales.AmtCharge+Sales.AmtCash+Sales.AmtCheck+Sales.AmtCreditC-Sales.AmtChng) AS DECIMAL(12,2))
+                         FROM Sales LEFT JOIN Receivab ON Sales.CustNo = Receivab.CustNo and Sales.Invoice = Receivab.Invoice 
+                         WHERE Sales.CustNo='{cus_no}' 
+                         AND Sales.LocNo='{loc_no}' AND Receivab.PaidOff IS NULL AND CAST((Sales.AmtCharge+Sales.AmtCash+Sales.AmtCheck+Sales.AmtCreditC-Sales.AmtChng) AS DECIMAL(12,2)) > 0"""
             invoice_list = cursor.execute(query).fetchall()
             data = []
             for invoice in invoice_list:

@@ -3,20 +3,23 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import LimitOffsetPagination
-
+from django.core.mail import send_mail
 from customer_dashboard.models import UserProfile
 from customer_dashboard.serializers import UserSerializer, FileNumberSerializer
 from key_door_finder.models import KeyQty, KeySequence
 from key_door_finder.serializers import KeyQtySerializer, EditKeySequenceSerializer, ActionKeySequenceSerializer, \
     KeySequenceSerializer, KeyRequestSerializer, AllKeyQtySerializer
-
+from django.conf.global_settings import EMAIL_HOST_USER
+from django.conf import settings
 import logging
 import pdfkit
 import csv
+import sqlite3
 from django.http import HttpResponse
 from django.db.models import Q
 from django.template.loader import render_to_string
-
+import pdb
+import json
 logger = logging.getLogger(__name__)
 NO_PERMISSOIN_MANAGE_KEYS_MESSAGE = 'You have no permission for manage keys'
 
@@ -46,7 +49,7 @@ class KeyQtyView(APIView, LimitOffsetPagination):
             response = {
                 'current_user': current_user_info,
                 'file_numbers': FileNumberSerializer(file_number_instance, many=True).data,
-                'selected': file_number_instance[0].file_number,
+                'selected': FileNumberSerializer(file_number_instance[0]).data,
                 'data': serializer.data
             }
             return self.get_paginated_response(response)
@@ -108,6 +111,20 @@ class KeySequenceView(APIView):
                     serializer = ActionKeySequenceSerializer(instance, data=request.data, context={'request': request})
                     if serializer.is_valid(raise_exception=True):
                         serializer.save()
+                        key_stamp = instance.key_id + " - "+ str(instance.sequence)
+                        send_mail(
+                            "Key Status - Calgary Lock and Safe",
+                            f"Status of Key(s) for {key_stamp} by {request.user.full_name()}",
+                            EMAIL_HOST_USER,
+                            [request.user.email, instance.email,settings.EMAIL_TO_CALGARY_REPORTS],
+                            html_message=render_to_string(
+                                'email/key_status_updated.html',
+                                {
+                                    'data': instance,
+                                    'key_stamp': key_stamp
+                                }
+                            )
+                        )
                         response = {'success': True, 'status': status.HTTP_200_OK, 'data': serializer.data}
                 except Exception as e:
                     logger.error('%s', e)

@@ -20,7 +20,7 @@ from customer_dashboard.custom_exception import EmailNotMatchedException, Passwo
 from customer_dashboard.query import get_last_name
 
 faker = Faker()
-
+import pdb
 # regular exp pattern for password
 # minimum 8 char with one upper, one lower, one special char and one numeric value is must
 PASSWORD_PATTERN = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
@@ -135,7 +135,7 @@ class UserAccessSerializer(serializers.ModelSerializer):
 class FileNumberSerializer(serializers.ModelSerializer):
     class Meta:
         model = FileNumber
-        fields = ['id', 'file_number', 'location']
+        fields = ['id', 'file_number', 'location',  'system_name']
 
 
 # serializer for adding new additional user (manage user tab)

@@ -27,7 +27,7 @@ class KeyQtySerializer(serializers.ModelSerializer):
         query = KeySequence.objects.filter(key_id=instance.key_id, file_number=instance.file_number)
         response['door_compromised'] = KeySequence.objects.filter(
             Q(key_id=instance.key_id) & Q(file_number=instance.file_number) & (
-                Q(lost_key=True) | Q(broken_key=True)
+                Q(lost_key=True) 
             )
         ).count()
         response['sequence'] = KeySequenceSerializer(query, many=True).data

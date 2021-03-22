@@ -10,6 +10,7 @@ from django.core.mail import send_mail, EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.conf.global_settings import EMAIL_HOST_USER
 from django.conf import settings
+import pdb
 
 import pdfkit
 import logging
@@ -22,7 +23,7 @@ from customer_dashboard.models import User, Audit, AccountNumber, FileNumber, Tr
 from customer_dashboard.serializers import CreateNewPrimaryUserSerializer, ChangePasswordSerializer, \
     AdditionalUserSerializer, UserAccessSerializer, UserSerializer, AuditSerializer, ToogleUserActiveSerializer, \
     FileNumberSerializer, CustomLoginSerializer, ResetPasswordSerializer
-from customer_dashboard.query import get_company_details, get_accounting, get_invoice_list, get_invoice, \
+from customer_dashboard.query import update_company_details, get_company_details, get_accounting, get_invoice_list, get_invoice, \
     get_quotations, get_service_request, get_quotes, get_quotes_list, get_invoice_for_query, get_last_name, \
     get_all_invoice_of_location, get_all_invoice, get_invoice_list_with_address
 from customer_dashboard.custom_exception import EmailNotMatchedException, PasswordException, NotFoundError, \
@@ -34,9 +35,11 @@ INTERNAL_SERVER_ERROR_500_MESSAGE = 'Something went wrong! Please try later'
 ESC_DATABASE_CONNECTION_ERROR = 'ESC Database Connection Error'
 PAYMENT_APPROVED_EMAIL_SUBJECT = "Payment Approved - Calgary Lock and Safe"
 PAYMENT_DENIED_EMAIL_SUBJECT = "Payment Denied - Calgary Lock and Safe"
+UPDATE_COMPANY_DETAILS_SUBJECT = "Company Details Updated - Calgary Lock and Safe"
 PAYMENT_APPROVED_TEMPLATE = 'email/payment_approved_to_customer.html'
 PAYMENT_APPROVED_TO_CALGARY_TEMPLATE = 'email/payment_approved_to_calgary.html'
 PAYMENT_DENIED_TO_CUSTOMER_TEMPLATE = 'email/payment_denied_to_customer.html'
+UPDATE_COMPANY_DETAILS_TEMPLATE = 'email/update_company_details.html'
 PAYMENT_DENIED_TO_CALGARY_TEMPLATE = 'email/payment_denied_to_calgary.html'
 PAYMENT_SUCCESSFUL_MESSAGE = 'Payment successful'
 PAYMENT_DENIED_MESSAGE = 'Payment denied'
@@ -527,6 +530,32 @@ class CompanyDetailsView(APIView):
                 'message': INTERNAL_SERVER_ERROR_500_MESSAGE
             })
 
+    def post(self, request, custNo, locNo):
+        res = update_company_details(custNo, locNo, request.data)
+        if res:
+            send_mail(
+                    UPDATE_COMPANY_DETAILS_SUBJECT,
+                    f"Update Company with CustNo {custNo} and Location {locNo} by {request.user.full_name()}",
+                    EMAIL_HOST_USER,
+                    [request.user.email, settings.EMAIL_TO_CALGARY_REPORTS],
+                    html_message=render_to_string(
+                        UPDATE_COMPANY_DETAILS_TEMPLATE,
+                        {
+                            'custNo' : custNo,
+                            'locNo': locNo,
+                            'user': request.user.full_name(),
+                            'locName': res[0],
+                            'address': res[1]
+                        }
+                    )
+                )
+            return JsonResponse({"success": True},  safe=False)
+        else:
+            return JsonResponse({
+                'error': True,
+                'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
+                'message': INTERNAL_SERVER_ERROR_500_MESSAGE
+            })
 
 # --------------------------------------------------- ACCOUNTING ----------------------------------------------------
 # Accounting View
