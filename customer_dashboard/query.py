@@ -219,8 +219,8 @@ def get_invoice(cus_no, loc_no, invoice):
             location_data = cursor.execute(location_query).fetchone()
             for i, loc in enumerate(('loc_name', 'address')):
                 data_dict[loc] = location_data[i]
-            invoice_query = f"""SELECT Sales.Invoice, Sales.InvDate, CAST((Sales.AmtCharge+Sales.AmtCash+Sales.AmtCheck+Sales.AmtCreditC-Sales.AmtChng) AS DECIMAL(12,2)) FROM Sales WHERE 
-                                Sales.Invoice='{invoice}'"""
+            invoice_query = f"""SELECT Invoice, InvDate, CAST((InvAmt  - Paid) AS DECIMAL(12,2)) FROM Receivab WHERE 
+                                Invoice='{invoice}'"""
             invoice_data = cursor.execute(invoice_query).fetchone()
             for j, inv in enumerate(('invoice', 'invoice_date', 'total')):
                 data_dict[inv] = invoice_data[j]
@@ -417,10 +417,11 @@ def get_all_invoice_of_location(cus_no, loc_no):
     if con:
         try:
             cursor = con.cursor()
-            query = f"""SELECT Sales.Invoice, CAST((Sales.AmtCharge+Sales.AmtCash+Sales.AmtCheck+Sales.AmtCreditC-Sales.AmtChng) AS DECIMAL(12,2))
-                         FROM Sales LEFT JOIN Receivab ON Sales.CustNo = Receivab.CustNo and Sales.Invoice = Receivab.Invoice 
-                         WHERE Sales.CustNo='{cus_no}' 
-                         AND Sales.LocNo='{loc_no}' AND Receivab.PaidOff IS NULL AND CAST((Sales.AmtCharge+Sales.AmtCash+Sales.AmtCheck+Sales.AmtCreditC-Sales.AmtChng) AS DECIMAL(12,2)) > 0"""
+            query = f"""SELECT Invoice, 
+            CAST((InvAmt - Paid) AS DECIMAL(12,2))
+                         FROM  Receivab
+                         WHERE CustNo='{cus_no}' 
+                         AND LocNo='{loc_no}' AND  CAST((InvAmt - Paid) AS DECIMAL(12,2)) > 0"""
             invoice_list = cursor.execute(query).fetchall()
             data = []
             for invoice in invoice_list:
@@ -443,8 +444,10 @@ def get_all_invoice(cus_no):
     if con:
         try:
             cursor = con.cursor()
-            query = f"""SELECT Invoice, [Invoice Total] FROM dbo.ViewListInvoices WHERE Customer='{cus_no}' 
-                        AND [Paid Off Date] IS NULL AND [Invoice Total] > 0"""
+            query = f"""SELECT Invoice, 
+                    CAST((InvAmt - Paid) AS DECIMAL(12,2))
+                    FROM Receivab WHERE CustNo='{cus_no}' AND
+                    CAST((InvAmt - Paid) AS DECIMAL(12,2)) > 0"""
             invoice_list = cursor.execute(query).fetchall()
             data = []
             for invoice in invoice_list:

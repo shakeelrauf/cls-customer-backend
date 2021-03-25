@@ -16,13 +16,12 @@ class KeyQty(models.Model):
     disabled = models.BooleanField(default=False)
     replaced = models.BooleanField(default=False)
     quantity = models.IntegerField()
-
+    
     class Meta:
         db_table = 'KeyQty'
 
     def __str__(self):
         return self.key_id
-
 
 class KeySequence(models.Model):
     file_number = models.CharField(max_length=255, null=True, blank=True)
@@ -41,6 +40,16 @@ class KeySequence(models.Model):
 
     def __str__(self):
         return f"{self.key_id}-{self.sequence}"
+
+class KeyQtyGroup(models.Model):
+    name = models.CharField(max_length=255, null=False)
+    keys_sequences = models.ManyToManyField(KeySequence)
+    
+    class Meta:
+        db_table = 'KeyGroups'
+    
+    def __str__(self):
+        return str(self.id) + str(self.name)
 
 
 class DoorsProMas(models.Model):

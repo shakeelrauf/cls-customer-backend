@@ -19645,3 +19645,361 @@ INFO 2021-03-22 01:48:46,621 basehttp 6128 8568 "OPTIONS /api/customer/invoice/p
 INFO 2021-03-22 01:48:46,660 basehttp 6128 8568 "GET /api/customer/invoice/payment/00010/ HTTP/1.1" 200 47
 INFO 2021-03-22 01:48:55,268 basehttp 6128 8568 "GET /api/customer/invoice/payment/00004/ HTTP/1.1" 200 2519
 INFO 2021-03-22 01:49:06,824 basehttp 6128 8568 "GET /api/customer/invoice/payment/00004/ HTTP/1.1" 200 2519
+INFO 2021-03-22 02:18:06,451 autoreload 6128 10604 Watching for file changes with StatReloader
+INFO 2021-03-22 02:19:26,861 basehttp 6128 10032 "POST /api/customer/login/ HTTP/1.1" 200 760
+INFO 2021-03-22 02:19:27,221 basehttp 6128 10032 "GET /api/customer/accounting/ HTTP/1.1" 200 492
+INFO 2021-03-22 02:19:32,256 basehttp 6128 10032 "GET /api/customer/accounting/invoice/list/00004/ HTTP/1.1" 200 298
+INFO 2021-03-22 02:21:11,878 basehttp 6128 10032 "GET /api/customer/accounting/invoice/list/00004/ HTTP/1.1" 200 298
+INFO 2021-03-22 02:21:18,788 basehttp 6128 10032 "GET /api/customer/accounting/ HTTP/1.1" 200 492
+INFO 2021-03-22 02:21:23,065 basehttp 6128 10032 "GET /api/customer/accounting/invoice/list/00004/ HTTP/1.1" 200 298
+INFO 2021-03-22 02:21:33,694 basehttp 6128 10032 "OPTIONS /api/customer/accounting/invoice/00004/0000144788/ HTTP/1.1" 200 0
+INFO 2021-03-22 02:21:33,763 basehttp 6128 10032 "GET /api/customer/accounting/invoice/00004/0000144788/ HTTP/1.1" 200 536
+INFO 2021-03-22 02:21:49,883 basehttp 6128 10032 "GET /api/customer/accounting/invoice/00004/0000144788/ HTTP/1.1" 200 536
+INFO 2021-03-22 02:21:55,154 basehttp 6128 10032 "OPTIONS /api/customer/accounting/invoice/00004/0000144932/ HTTP/1.1" 200 0
+INFO 2021-03-22 02:21:55,225 basehttp 6128 10032 "GET /api/customer/accounting/invoice/00004/0000144932/ HTTP/1.1" 200 877
+WARNING 2021-03-22 02:25:32,093 log 6128 10032 Unauthorized: /api/customer/invoice/payment/00004/
+WARNING 2021-03-22 02:25:32,094 basehttp 6128 10032 "GET /api/customer/invoice/payment/00004/ HTTP/1.1" 401 183
+INFO 2021-03-22 02:25:32,120 basehttp 6128 10032 "POST /api/token/refresh/ HTTP/1.1" 200 218
+INFO 2021-03-22 02:25:32,191 basehttp 6128 10032 "GET /api/customer/invoice/payment/00004/ HTTP/1.1" 200 2519
+INFO 2021-03-22 02:26:06,038 basehttp 6128 10032 "GET /api/customer/invoice/payment/00004/ HTTP/1.1" 200 2519
+INFO 2021-03-22 03:01:41,212 autoreload 6128 10604 C:\Data\django\customer_portal\backend\customer_dashboard\query.py changed, reloading.
+INFO 2021-03-22 03:01:42,973 autoreload 9024 5056 Watching for file changes with StatReloader
+INFO 2021-03-22 03:01:55,190 basehttp 9024 6580 "OPTIONS /api/customer/invoice/payment/00004/ HTTP/1.1" 200 0
+WARNING 2021-03-22 03:01:55,200 log 9024 6580 Unauthorized: /api/customer/invoice/payment/00004/
+WARNING 2021-03-22 03:01:55,200 basehttp 9024 6580 "GET /api/customer/invoice/payment/00004/ HTTP/1.1" 401 183
+INFO 2021-03-22 03:01:55,209 basehttp 9024 6580 "OPTIONS /api/token/refresh/ HTTP/1.1" 200 0
+INFO 2021-03-22 03:01:55,213 basehttp 9024 6580 "POST /api/token/refresh/ HTTP/1.1" 200 218
+INFO 2021-03-22 03:01:55,436 basehttp 9024 6580 "GET /api/customer/invoice/payment/00004/ HTTP/1.1" 200 94
+INFO 2021-03-22 03:02:16,341 basehttp 9024 6580 "GET /api/customer/invoice/payment/00004/ HTTP/1.1" 200 94
+ERROR 2021-03-22 03:02:39,360 log 9024 9224 Internal Server Error: /api/customer/pdf/invoice/0007123/00004/0000144788/
+Traceback (most recent call last):
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\django\core\handlers\base.py", line 124, in _get_response
+    raise ValueError(
+ValueError: The view customer_dashboard.views.invoice_pdf_view didn't return an HttpResponse object. It returned None instead.
+ERROR 2021-03-22 03:02:39,362 basehttp 9024 9224 "GET /api/customer/pdf/invoice/0007123/00004/0000144788/ HTTP/1.1" 500 66371
+WARNING 2021-03-22 03:02:39,929 log 9024 9224 Not Found: /favicon.ico
+WARNING 2021-03-22 03:02:39,929 basehttp 9024 9224 "GET /favicon.ico HTTP/1.1" 404 2480
+INFO 2021-03-22 03:06:00,264 autoreload 9024 5056 C:\Data\django\customer_portal\backend\customer_dashboard\query.py changed, reloading.
+INFO 2021-03-22 03:06:02,514 autoreload 4156 5780 Watching for file changes with StatReloader
+ERROR 2021-03-22 03:06:05,970 log 4156 11256 Internal Server Error: /api/customer/pdf/invoice/0007123/00004/0000144788/
+Traceback (most recent call last):
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\django\core\handlers\base.py", line 124, in _get_response
+    raise ValueError(
+ValueError: The view customer_dashboard.views.invoice_pdf_view didn't return an HttpResponse object. It returned None instead.
+ERROR 2021-03-22 03:06:05,973 basehttp 4156 11256 "GET /api/customer/pdf/invoice/0007123/00004/0000144788/ HTTP/1.1" 500 66508
+INFO 2021-03-22 03:07:01,709 autoreload 4156 5780 C:\Data\django\customer_portal\backend\customer_dashboard\views.py changed, reloading.
+INFO 2021-03-22 03:07:04,072 autoreload 6880 7064 Watching for file changes with StatReloader
+ERROR 2021-03-22 03:07:07,955 log 6880 9300 Internal Server Error: /api/customer/pdf/invoice/0007123/00004/0000144788/
+Traceback (most recent call last):
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\pdfkit\configuration.py", line 21, in __init__
+    with open(self.wkhtmltopdf) as f:
+FileNotFoundError: [Errno 2] No such file or directory: b''
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\django\core\handlers\base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\django\core\handlers\base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Data\django\customer_portal\backend\customer_dashboard\views.py", line 1525, in invoice_pdf_view
+    output = pdfkit.from_string(html, output_path=False)
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\pdfkit\api.py", line 69, in from_string
+    r = PDFKit(input, 'string', options=options, toc=toc, cover=cover, css=css,
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\pdfkit\pdfkit.py", line 42, in __init__
+    self.configuration = (Configuration() if configuration is None
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\pdfkit\configuration.py", line 24, in __init__
+    raise IOError('No wkhtmltopdf executable found: "%s"\n'
+OSError: No wkhtmltopdf executable found: "b''"
+If this file exists please check that this process can read it. Otherwise please install wkhtmltopdf - https://github.com/JazzCore/python-pdfkit/wiki/Installing-wkhtmltopdf
+ERROR 2021-03-22 03:07:07,960 basehttp 6880 9300 "GET /api/customer/pdf/invoice/0007123/00004/0000144788/ HTTP/1.1" 500 114966
+ERROR 2021-03-22 03:10:46,954 log 6880 9300 Internal Server Error: /api/customer/pdf/invoice/0007123/00004/0000144788/
+Traceback (most recent call last):
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\pdfkit\configuration.py", line 21, in __init__
+    with open(self.wkhtmltopdf) as f:
+FileNotFoundError: [Errno 2] No such file or directory: b''
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\django\core\handlers\base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\django\core\handlers\base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Data\django\customer_portal\backend\customer_dashboard\views.py", line 1525, in invoice_pdf_view
+    output = pdfkit.from_string(html, output_path=False)
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\pdfkit\api.py", line 69, in from_string
+    r = PDFKit(input, 'string', options=options, toc=toc, cover=cover, css=css,
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\pdfkit\pdfkit.py", line 42, in __init__
+    self.configuration = (Configuration() if configuration is None
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\pdfkit\configuration.py", line 24, in __init__
+    raise IOError('No wkhtmltopdf executable found: "%s"\n'
+OSError: No wkhtmltopdf executable found: "b''"
+If this file exists please check that this process can read it. Otherwise please install wkhtmltopdf - https://github.com/JazzCore/python-pdfkit/wiki/Installing-wkhtmltopdf
+ERROR 2021-03-22 03:10:46,956 basehttp 6880 9300 "GET /api/customer/pdf/invoice/0007123/00004/0000144788/ HTTP/1.1" 500 114966
+INFO 2021-03-22 03:11:04,610 autoreload 13204 5608 Watching for file changes with StatReloader
+ERROR 2021-03-22 03:11:10,911 log 13204 3516 Internal Server Error: /api/customer/pdf/invoice/0007123/00004/0000144788/
+Traceback (most recent call last):
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\pdfkit\configuration.py", line 21, in __init__
+    with open(self.wkhtmltopdf) as f:
+FileNotFoundError: [Errno 2] No such file or directory: b''
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\django\core\handlers\base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\django\core\handlers\base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Data\django\customer_portal\backend\customer_dashboard\views.py", line 1525, in invoice_pdf_view
+    output = pdfkit.from_string(html, output_path=False)
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\pdfkit\api.py", line 69, in from_string
+    r = PDFKit(input, 'string', options=options, toc=toc, cover=cover, css=css,
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\pdfkit\pdfkit.py", line 42, in __init__
+    self.configuration = (Configuration() if configuration is None
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\pdfkit\configuration.py", line 24, in __init__
+    raise IOError('No wkhtmltopdf executable found: "%s"\n'
+OSError: No wkhtmltopdf executable found: "b''"
+If this file exists please check that this process can read it. Otherwise please install wkhtmltopdf - https://github.com/JazzCore/python-pdfkit/wiki/Installing-wkhtmltopdf
+ERROR 2021-03-22 03:11:10,920 basehttp 13204 3516 "GET /api/customer/pdf/invoice/0007123/00004/0000144788/ HTTP/1.1" 500 114966
+INFO 2021-03-22 03:11:47,654 autoreload 10096 9972 Watching for file changes with StatReloader
+ERROR 2021-03-22 03:11:49,395 log 10096 5392 Internal Server Error: /api/customer/pdf/invoice/0007123/00004/0000144788/
+Traceback (most recent call last):
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\pdfkit\configuration.py", line 21, in __init__
+    with open(self.wkhtmltopdf) as f:
+FileNotFoundError: [Errno 2] No such file or directory: b''
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\django\core\handlers\base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\django\core\handlers\base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Data\django\customer_portal\backend\customer_dashboard\views.py", line 1525, in invoice_pdf_view
+    output = pdfkit.from_string(html, output_path=False)
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\pdfkit\api.py", line 69, in from_string
+    r = PDFKit(input, 'string', options=options, toc=toc, cover=cover, css=css,
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\pdfkit\pdfkit.py", line 42, in __init__
+    self.configuration = (Configuration() if configuration is None
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\pdfkit\configuration.py", line 24, in __init__
+    raise IOError('No wkhtmltopdf executable found: "%s"\n'
+OSError: No wkhtmltopdf executable found: "b''"
+If this file exists please check that this process can read it. Otherwise please install wkhtmltopdf - https://github.com/JazzCore/python-pdfkit/wiki/Installing-wkhtmltopdf
+ERROR 2021-03-22 03:11:49,400 basehttp 10096 5392 "GET /api/customer/pdf/invoice/0007123/00004/0000144788/ HTTP/1.1" 500 114966
+ERROR 2021-03-22 03:11:53,374 log 10096 5392 Internal Server Error: /api/customer/pdf/invoice/0007123/00004/0000144788/
+Traceback (most recent call last):
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\pdfkit\configuration.py", line 21, in __init__
+    with open(self.wkhtmltopdf) as f:
+FileNotFoundError: [Errno 2] No such file or directory: b''
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\django\core\handlers\base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\django\core\handlers\base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Data\django\customer_portal\backend\customer_dashboard\views.py", line 1525, in invoice_pdf_view
+    output = pdfkit.from_string(html, output_path=False)
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\pdfkit\api.py", line 69, in from_string
+    r = PDFKit(input, 'string', options=options, toc=toc, cover=cover, css=css,
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\pdfkit\pdfkit.py", line 42, in __init__
+    self.configuration = (Configuration() if configuration is None
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\pdfkit\configuration.py", line 24, in __init__
+    raise IOError('No wkhtmltopdf executable found: "%s"\n'
+OSError: No wkhtmltopdf executable found: "b''"
+If this file exists please check that this process can read it. Otherwise please install wkhtmltopdf - https://github.com/JazzCore/python-pdfkit/wiki/Installing-wkhtmltopdf
+ERROR 2021-03-22 03:11:53,376 basehttp 10096 5392 "GET /api/customer/pdf/invoice/0007123/00004/0000144788/ HTTP/1.1" 500 114966
+INFO 2021-03-22 03:12:41,404 autoreload 10096 9972 C:\Data\django\customer_portal\backend\customer_dashboard\views.py changed, reloading.
+INFO 2021-03-22 03:12:43,335 autoreload 13300 7984 Watching for file changes with StatReloader
+ERROR 2021-03-22 03:12:50,283 log 13300 5548 Internal Server Error: /api/customer/pdf/invoice/0007123/00004/0000144788/
+Traceback (most recent call last):
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\django\core\handlers\base.py", line 124, in _get_response
+    raise ValueError(
+ValueError: The view customer_dashboard.views.invoice_pdf_view didn't return an HttpResponse object. It returned None instead.
+ERROR 2021-03-22 03:12:50,285 basehttp 13300 5548 "GET /api/customer/pdf/invoice/0007123/00004/0000144788/ HTTP/1.1" 500 66359
+INFO 2021-03-22 03:13:02,018 basehttp 13300 5652 "OPTIONS /api/customer/accounting/ HTTP/1.1" 200 0
+WARNING 2021-03-22 03:13:05,862 log 13300 5652 Unauthorized: /api/customer/accounting/
+WARNING 2021-03-22 03:13:05,863 basehttp 13300 5652 "GET /api/customer/accounting/ HTTP/1.1" 401 183
+INFO 2021-03-22 03:13:05,882 basehttp 13300 5652 "POST /api/token/refresh/ HTTP/1.1" 200 218
+INFO 2021-03-22 03:13:06,065 basehttp 13300 5652 "GET /api/customer/accounting/ HTTP/1.1" 200 492
+INFO 2021-03-22 03:13:08,431 basehttp 13300 5652 "OPTIONS /api/customer/accounting/invoice/list/00004/ HTTP/1.1" 200 0
+INFO 2021-03-22 03:13:08,451 basehttp 13300 5652 "GET /api/customer/accounting/invoice/list/00004/ HTTP/1.1" 200 298
+INFO 2021-03-22 03:13:11,763 basehttp 13300 5652 "GET /api/customer/invoice/payment/00010/ HTTP/1.1" 200 47
+ERROR 2021-03-22 03:14:00,799 log 13300 5548 Internal Server Error: /api/customer/pdf/invoice/0007123/00004/0000144788/
+Traceback (most recent call last):
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\django\core\handlers\base.py", line 124, in _get_response
+    raise ValueError(
+ValueError: The view customer_dashboard.views.invoice_pdf_view didn't return an HttpResponse object. It returned None instead.
+ERROR 2021-03-22 03:14:00,802 basehttp 13300 5548 "GET /api/customer/pdf/invoice/0007123/00004/0000144788/ HTTP/1.1" 500 66338
+INFO 2021-03-22 03:14:08,343 basehttp 13300 5652 "GET /api/customer/accounting/ HTTP/1.1" 200 492
+INFO 2021-03-22 03:14:17,592 basehttp 13300 5652 "GET /api/customer/invoice/payment/00004/ HTTP/1.1" 200 94
+WARNING 2021-03-22 04:26:50,918 log 13300 6980 Unauthorized: /api/customer/accounting/invoice/list/00004/
+WARNING 2021-03-22 04:26:50,918 basehttp 13300 6980 "GET /api/customer/accounting/invoice/list/00004/ HTTP/1.1" 401 183
+INFO 2021-03-22 04:26:50,931 basehttp 13300 6980 "POST /api/token/refresh/ HTTP/1.1" 200 218
+INFO 2021-03-22 04:26:51,031 basehttp 13300 6980 "GET /api/customer/accounting/invoice/list/00004/ HTTP/1.1" 200 298
+INFO 2021-03-22 04:27:03,245 basehttp 13300 6980 "OPTIONS /api/customer/accounting/invoice/00004/0000144788/ HTTP/1.1" 200 0
+INFO 2021-03-22 04:27:03,300 basehttp 13300 6980 "GET /api/customer/accounting/invoice/00004/0000144788/ HTTP/1.1" 200 536
+INFO 2021-03-22 05:39:20,580 basehttp 13300 4236 "OPTIONS /api/customer/invoice/payment/00004/ HTTP/1.1" 200 0
+WARNING 2021-03-22 05:39:20,584 log 13300 4236 Unauthorized: /api/customer/invoice/payment/00004/
+WARNING 2021-03-22 05:39:20,586 basehttp 13300 4236 "GET /api/customer/invoice/payment/00004/ HTTP/1.1" 401 183
+INFO 2021-03-22 05:39:20,594 basehttp 13300 4236 "OPTIONS /api/token/refresh/ HTTP/1.1" 200 0
+INFO 2021-03-22 05:39:20,599 basehttp 13300 4236 "POST /api/token/refresh/ HTTP/1.1" 200 218
+INFO 2021-03-22 05:39:20,797 basehttp 13300 4236 "GET /api/customer/invoice/payment/00004/ HTTP/1.1" 200 94
+INFO 2021-03-22 05:39:32,543 basehttp 13300 4236 "GET /api/customer/accounting/invoice/00004/0000144788/ HTTP/1.1" 200 536
+INFO 2021-03-22 05:39:44,401 basehttp 13300 4236 "GET /api/customer/accounting/invoice/00004/0000144788/ HTTP/1.1" 200 536
+INFO 2021-03-22 05:40:11,004 basehttp 13300 4236 "OPTIONS /api/customer/accounting/ HTTP/1.1" 200 0
+INFO 2021-03-24 01:01:39,506 autoreload 12488 1192 Watching for file changes with StatReloader
+INFO 2021-03-24 01:02:49,781 autoreload 12352 8752 Watching for file changes with StatReloader
+INFO 2021-03-24 01:02:51,744 basehttp 12352 5940 "OPTIONS /api/customer/login/ HTTP/1.1" 200 0
+INFO 2021-03-24 01:02:52,386 basehttp 12352 5940 "POST /api/customer/login/ HTTP/1.1" 200 760
+INFO 2021-03-24 01:02:52,673 basehttp 12352 5940 "OPTIONS /api/customer/accounting/ HTTP/1.1" 200 0
+INFO 2021-03-24 01:02:52,937 basehttp 12352 5940 "GET /api/customer/accounting/ HTTP/1.1" 200 492
+INFO 2021-03-24 01:03:17,508 basehttp 12352 5940 "OPTIONS /api/customer/accounting/invoice/list/00004/ HTTP/1.1" 200 0
+INFO 2021-03-24 01:03:17,533 basehttp 12352 5940 "GET /api/customer/accounting/invoice/list/00004/ HTTP/1.1" 200 298
+INFO 2021-03-24 01:05:02,545 basehttp 12352 5940 "OPTIONS /api/customer/invoice/payment/00004/ HTTP/1.1" 200 0
+INFO 2021-03-24 01:05:02,669 basehttp 12352 5940 "GET /api/customer/invoice/payment/00004/ HTTP/1.1" 200 94
+INFO 2021-03-24 01:05:09,918 basehttp 12352 5940 "OPTIONS /api/customer/accounting/invoice/00004/0000144932/ HTTP/1.1" 200 0
+INFO 2021-03-24 01:05:10,001 basehttp 12352 5940 "GET /api/customer/accounting/invoice/00004/0000144932/ HTTP/1.1" 200 877
+INFO 2021-03-24 01:25:47,620 basehttp 12352 7028 "OPTIONS /api/customer/quotations/pending/ HTTP/1.1" 200 0
+WARNING 2021-03-24 01:25:47,638 log 12352 7028 Unauthorized: /api/customer/quotations/pending/
+WARNING 2021-03-24 01:25:47,640 basehttp 12352 7028 "GET /api/customer/quotations/pending/ HTTP/1.1" 401 183
+INFO 2021-03-24 01:25:47,652 basehttp 12352 7028 "OPTIONS /api/token/refresh/ HTTP/1.1" 200 0
+INFO 2021-03-24 01:25:47,659 basehttp 12352 7028 "POST /api/token/refresh/ HTTP/1.1" 200 218
+INFO 2021-03-24 01:25:48,267 basehttp 12352 7028 "GET /api/customer/quotations/pending/ HTTP/1.1" 200 710
+INFO 2021-03-24 01:25:56,022 basehttp 12352 7028 "OPTIONS /api/customer/quotations/accepted/ HTTP/1.1" 200 0
+INFO 2021-03-24 01:25:56,292 basehttp 12352 7028 "GET /api/customer/quotations/accepted/ HTTP/1.1" 200 975
+INFO 2021-03-24 01:26:05,224 basehttp 12352 7028 "OPTIONS /api/customer/company/details/ HTTP/1.1" 200 0
+INFO 2021-03-24 01:26:05,247 basehttp 12352 7028 "GET /api/customer/company/details/ HTTP/1.1" 200 1474
+INFO 2021-03-24 01:26:07,210 basehttp 12352 7028 "OPTIONS /api/kdfinder/keys/?file_number=all&limit=null&offset=null HTTP/1.1" 200 0
+INFO 2021-03-24 01:26:07,261 basehttp 12352 7028 "GET /api/kdfinder/keys/?file_number=all&limit=null&offset=null HTTP/1.1" 200 2758
+INFO 2021-03-24 01:26:13,217 basehttp 12352 7028 "OPTIONS /api/kdfinder/keys/?file_number=a1&limit=null&offset=null HTTP/1.1" 200 0
+INFO 2021-03-24 01:26:13,238 basehttp 12352 7028 "GET /api/kdfinder/keys/?file_number=a1&limit=null&offset=null HTTP/1.1" 200 529
+INFO 2021-03-24 01:26:17,680 basehttp 12352 7028 "OPTIONS /api/kdfinder/keys/?file_number=AAA&limit=null&offset=null HTTP/1.1" 200 0
+INFO 2021-03-24 01:26:17,740 basehttp 12352 7028 "GET /api/kdfinder/keys/?file_number=AAA&limit=null&offset=null HTTP/1.1" 200 2758
+INFO 2021-03-24 01:26:28,540 basehttp 12352 7028 "GET /api/kdfinder/keys/?file_number=all&limit=null&offset=null HTTP/1.1" 200 2758
+WARNING 2021-03-24 02:13:01,075 log 12352 7956 Unauthorized: /api/kdfinder/keys/
+WARNING 2021-03-24 02:13:01,076 basehttp 12352 7956 "GET /api/kdfinder/keys/?file_number=all&limit=null&offset=null HTTP/1.1" 401 183
+INFO 2021-03-24 02:13:01,388 basehttp 12352 7956 "POST /api/token/refresh/ HTTP/1.1" 200 218
+INFO 2021-03-24 02:13:01,446 basehttp 12352 7956 "GET /api/kdfinder/keys/?file_number=all&limit=null&offset=null HTTP/1.1" 200 2758
+INFO 2021-03-24 02:13:34,339 basehttp 12352 7956 "GET /api/customer/accounting/ HTTP/1.1" 200 492
+INFO 2021-03-24 02:13:40,750 basehttp 12352 7956 "OPTIONS /api/customer/file-numbers/ HTTP/1.1" 200 0
+INFO 2021-03-24 02:13:40,782 basehttp 12352 7956 "GET /api/customer/file-numbers/ HTTP/1.1" 200 298
+INFO 2021-03-24 02:13:43,341 basehttp 12352 7956 "OPTIONS /api/customer/manage/user/?limit=null&offset=null HTTP/1.1" 200 0
+INFO 2021-03-24 02:13:43,371 basehttp 12352 7956 "GET /api/customer/manage/user/?limit=null&offset=null HTTP/1.1" 200 629
+INFO 2021-03-24 02:13:45,371 basehttp 12352 7956 "GET /api/customer/company/details/ HTTP/1.1" 200 1474
+INFO 2021-03-24 02:13:48,083 basehttp 12352 7956 "OPTIONS /api/customer/audit/?limit=null&offset=null HTTP/1.1" 200 0
+INFO 2021-03-24 02:13:48,197 basehttp 12352 7956 "GET /api/customer/audit/?limit=null&offset=null HTTP/1.1" 200 195
+INFO 2021-03-24 02:13:49,600 basehttp 12352 7956 "GET /api/kdfinder/keys/?file_number=all&limit=null&offset=null HTTP/1.1" 200 2758
+INFO 2021-03-24 02:13:51,572 basehttp 12352 7956 "GET /api/customer/quotations/pending/ HTTP/1.1" 200 710
+INFO 2021-03-24 02:13:53,069 basehttp 12352 7956 "OPTIONS /api/customer/service-request/ HTTP/1.1" 200 0
+INFO 2021-03-24 02:13:53,096 basehttp 12352 7956 "GET /api/customer/service-request/ HTTP/1.1" 200 1197
+INFO 2021-03-24 02:13:54,972 basehttp 12352 7956 "GET /api/customer/accounting/ HTTP/1.1" 200 492
+INFO 2021-03-24 02:17:08,436 basehttp 12352 7956 "OPTIONS /api/customer/invoice/all/payment/ HTTP/1.1" 200 0
+INFO 2021-03-24 02:17:08,546 basehttp 12352 7956 "GET /api/customer/invoice/all/payment/ HTTP/1.1" 200 188
+WARNING 2021-03-24 02:18:22,760 log 12352 7956 Unauthorized: /api/customer/accounting/
+WARNING 2021-03-24 02:18:22,761 basehttp 12352 7956 "GET /api/customer/accounting/ HTTP/1.1" 401 183
+INFO 2021-03-24 02:18:22,868 basehttp 12352 7956 "POST /api/token/refresh/ HTTP/1.1" 200 218
+INFO 2021-03-24 02:18:22,987 basehttp 12352 7956 "GET /api/customer/accounting/ HTTP/1.1" 200 492
+INFO 2021-03-24 02:18:26,390 basehttp 12352 7956 "GET /api/customer/accounting/invoice/list/00004/ HTTP/1.1" 200 298
+INFO 2021-03-24 02:18:32,321 basehttp 12352 7956 "OPTIONS /api/customer/accounting/invoice/list/00010/ HTTP/1.1" 200 0
+INFO 2021-03-24 02:18:32,349 basehttp 12352 7956 "GET /api/customer/accounting/invoice/list/00010/ HTTP/1.1" 200 150
+INFO 2021-03-24 02:23:01,265 autoreload 12352 8752 C:\Data\django\customer_portal\backend\customer_dashboard\query.py changed, reloading.
+INFO 2021-03-24 02:23:03,107 autoreload 6652 6432 Watching for file changes with StatReloader
+ERROR 2021-03-24 02:23:15,098 log 6652 7064 Internal Server Error: /api/customer/invoice/all/payment/
+Traceback (most recent call last):
+  File "C:\Data\django\customer_portal\backend\customer_dashboard\query.py", line 451, in get_all_invoice
+    invoice_list = cursor.execute(query).fetchall()
+pyodbc.ProgrammingError: ('42S22', "[42S22] [Microsoft][ODBC SQL Server Driver][SQL Server]Invalid column name 'Customer'. (207) (SQLExecDirectW)")
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\django\core\handlers\base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\django\core\handlers\base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\django\views\generic\base.py", line 71, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\devteam2\AppData\Local\Programs\Python\Python38\lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Data\django\customer_portal\backend\customer_dashboard\views.py", line 1028, in get
+    data = get_all_invoice(cus_no)
+  File "C:\Data\django\customer_portal\backend\customer_dashboard\query.py", line 462, in get_all_invoice
+    raise ESCDataNotFetchingError
+customer_dashboard.custom_exception.ESCDataNotFetchingError
+ERROR 2021-03-24 02:23:15,107 basehttp 6652 7064 "GET /api/customer/invoice/all/payment/ HTTP/1.1" 500 19603
+INFO 2021-03-24 02:23:43,175 autoreload 6652 6432 C:\Data\django\customer_portal\backend\customer_dashboard\query.py changed, reloading.
+INFO 2021-03-24 02:23:45,047 autoreload 7436 9836 Watching for file changes with StatReloader
+WARNING 2021-03-24 02:23:49,670 log 7436 7868 Unauthorized: /api/customer/invoice/all/payment/
+WARNING 2021-03-24 02:23:49,671 basehttp 7436 7868 "GET /api/customer/invoice/all/payment/ HTTP/1.1" 401 183
+INFO 2021-03-24 02:23:49,682 basehttp 7436 7868 "POST /api/token/refresh/ HTTP/1.1" 200 218
+INFO 2021-03-24 02:24:17,883 autoreload 7436 9836 C:\Data\django\customer_portal\backend\customer_dashboard\query.py changed, reloading.
+INFO 2021-03-24 02:24:19,577 autoreload 5788 12136 Watching for file changes with StatReloader
+INFO 2021-03-24 02:24:34,238 basehttp 5788 12148 "GET /api/customer/invoice/all/payment/ HTTP/1.1" 200 141
+INFO 2021-03-24 02:25:03,341 autoreload 5788 12136 C:\Data\django\customer_portal\backend\customer_dashboard\query.py changed, reloading.
+INFO 2021-03-24 02:25:05,532 autoreload 10860 11640 Watching for file changes with StatReloader
+INFO 2021-03-24 02:25:17,221 basehttp 10860 12920 "GET /api/customer/accounting/ HTTP/1.1" 200 492
+INFO 2021-03-24 02:27:29,956 basehttp 10860 12920 "GET /api/customer/accounting/invoice/list/00004/ HTTP/1.1" 200 298
+INFO 2021-03-24 02:27:36,044 basehttp 10860 12920 "GET /api/customer/invoice/all/payment/ HTTP/1.1" 200 141
+INFO 2021-03-24 02:27:58,771 basehttp 10860 12920 "GET /api/customer/accounting/ HTTP/1.1" 200 492
+WARNING 2021-03-24 03:52:19,447 log 10860 10480 Unauthorized: /api/customer/invoice/all/payment/
+WARNING 2021-03-24 03:52:19,449 basehttp 10860 10480 "GET /api/customer/invoice/all/payment/ HTTP/1.1" 401 183
+INFO 2021-03-24 03:52:19,478 basehttp 10860 10480 "OPTIONS /api/token/refresh/ HTTP/1.1" 200 0
+INFO 2021-03-24 03:52:19,489 basehttp 10860 10480 "POST /api/token/refresh/ HTTP/1.1" 200 218
+INFO 2021-03-24 03:52:19,543 basehttp 10860 10480 "GET /api/customer/invoice/all/payment/ HTTP/1.1" 200 141
+INFO 2021-03-24 05:44:14,890 basehttp 10860 12948 "OPTIONS /api/kdfinder/keys/?file_number=all&limit=null&offset=null HTTP/1.1" 200 0
+WARNING 2021-03-24 05:44:15,006 log 10860 12948 Unauthorized: /api/kdfinder/keys/
+WARNING 2021-03-24 05:44:15,007 basehttp 10860 12948 "GET /api/kdfinder/keys/?file_number=all&limit=null&offset=null HTTP/1.1" 401 183
+INFO 2021-03-24 05:44:15,029 basehttp 10860 12948 "POST /api/token/refresh/ HTTP/1.1" 200 218
+INFO 2021-03-24 05:44:15,090 basehttp 10860 12948 "GET /api/kdfinder/keys/?file_number=all&limit=null&offset=null HTTP/1.1" 200 2758
+INFO 2021-03-24 05:45:10,151 basehttp 10860 12948 "GET /api/kdfinder/keys/?file_number=all&limit=null&offset=null HTTP/1.1" 200 2758
+INFO 2021-03-24 07:26:26,149 autoreload 10860 11640 C:\Data\django\customer_portal\backend\key_door_finder\models.py changed, reloading.
+INFO 2021-03-24 07:26:29,168 autoreload 8420 5824 Watching for file changes with StatReloader
+INFO 2021-03-24 07:27:50,254 autoreload 8420 5824 C:\Data\django\customer_portal\backend\key_door_finder\models.py changed, reloading.
+INFO 2021-03-24 07:27:58,424 autoreload 6188 4572 Watching for file changes with StatReloader
+INFO 2021-03-24 07:36:41,412 autoreload 10492 3872 Watching for file changes with StatReloader
+WARNING 2021-03-24 07:36:46,801 log 10492 8864 Unauthorized: /api/kdfinder/keys/
+WARNING 2021-03-24 07:36:46,803 basehttp 10492 8864 "GET /api/kdfinder/keys/?file_number=all&limit=null&offset=null HTTP/1.1" 401 183
+INFO 2021-03-24 07:36:46,813 basehttp 10492 8864 "OPTIONS /api/token/refresh/ HTTP/1.1" 200 0
+INFO 2021-03-24 07:36:46,819 basehttp 10492 8864 "POST /api/token/refresh/ HTTP/1.1" 200 218
+INFO 2021-03-24 07:36:46,973 basehttp 10492 8864 "GET /api/kdfinder/keys/?file_number=all&limit=null&offset=null HTTP/1.1" 200 2758
+INFO 2021-03-24 07:44:26,058 autoreload 10492 3872 C:\Data\django\customer_portal\backend\key_door_finder\models.py changed, reloading.
+INFO 2021-03-24 07:44:28,032 autoreload 3216 7728 Watching for file changes with StatReloader
+INFO 2021-03-24 07:45:27,285 autoreload 3216 7728 C:\Data\django\customer_portal\backend\key_door_finder\models.py changed, reloading.
+INFO 2021-03-24 07:45:28,962 autoreload 7704 4556 Watching for file changes with StatReloader
+INFO 2021-03-24 07:46:11,676 autoreload 3636 7608 Watching for file changes with StatReloader
+INFO 2021-03-24 07:46:16,105 basehttp 3636 4384 "OPTIONS /api/kdfinder/keys/?file_number=all&limit=null&offset=null HTTP/1.1" 200 0
+WARNING 2021-03-24 07:46:16,123 log 3636 4384 Unauthorized: /api/kdfinder/keys/
+WARNING 2021-03-24 07:46:16,123 basehttp 3636 4384 "GET /api/kdfinder/keys/?file_number=all&limit=null&offset=null HTTP/1.1" 401 183
+INFO 2021-03-24 07:46:16,143 basehttp 3636 4384 "POST /api/token/refresh/ HTTP/1.1" 200 218
+INFO 2021-03-24 07:46:16,208 basehttp 3636 4384 "GET /api/kdfinder/keys/?file_number=all&limit=null&offset=null HTTP/1.1" 200 2758
