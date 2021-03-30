@@ -100,6 +100,13 @@ DATABASES = {
     'default': {
         'ENGINE': config('CUSDB_ENGINE'),
         'NAME': config('CUSDB_NAME'),
+        'HOST': config('CUSDB_HOST'),
+        'USER': config('CUSDB_USER'),
+        'PASSWORD': config('CUSDB_PASSWORD'),
+        'OPTIONS': {
+            'driver': config('CUSDB_DRIVER'),
+            'unicode_results': config('CUSDB_UNICODE_RESULTS', cast=bool),
+        }
     },
     'esc': {
         'ENGINE': config('ESC_ENGINE'),
@@ -152,7 +159,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/api/static/'
 STATICFILES_DIRS = [
     STATIC_DIR
 ]

@@ -5,7 +5,10 @@ urlpatterns = [
     # key quantity
     path('keys/', views.KeyQtyView.as_view(), name='view_keys'),
     path('keys/all/', views.AllKeyQuantityView.as_view(), name='all_keys'),
-
+    # key groupings
+    path('keysgroups/', views.KeyGroupsView.as_view(), name="view_key_groupings"),
+    path('keysgroups/group/<id>', views.KeyGroupView.as_view(), name="view_key_grouping"),
+    path('keysgroups/remove_item', views.RemoveKeySequenceFromKeyGroup.as_view(), name="remove_view_key_grouping"),
     # key sequence
     path('sequence/<int:pk>/', views.KeySequenceView.as_view(), name='key_sequence'),
     path('sequence/export/csv/<int:pk>/', views.ExportCSVKeySequence.as_view(), name='export_key_sequence'),

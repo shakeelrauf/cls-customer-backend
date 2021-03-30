@@ -23,6 +23,16 @@ class KeyQty(models.Model):
     def __str__(self):
         return self.key_id
 
+class KeyGroup(models.Model):
+    name = models.CharField(max_length=255, null=False)
+    issue_date = models.DateTimeField(null=True)
+    class Meta:
+        db_table = 'KeyGroups'
+    
+    def __str__(self):
+        return str(self.id) + str(self.name)
+
+
 class KeySequence(models.Model):
     file_number = models.CharField(max_length=255, null=True, blank=True)
     key_id = models.CharField(max_length=255, null=True, blank=True)
@@ -34,22 +44,12 @@ class KeySequence(models.Model):
     email = models.EmailField(max_length=255, null=True, blank=True)
     lost_key = models.BooleanField(default=False, null=True, blank=True)
     broken_key = models.BooleanField(default=False, null=True, blank=True)
-
+    group = models.ForeignKey(to=KeyGroup,null=True, on_delete=models.SET_NULL)
     class Meta:
         db_table = 'KeySequence'
 
     def __str__(self):
         return f"{self.key_id}-{self.sequence}"
-
-class KeyQtyGroup(models.Model):
-    name = models.CharField(max_length=255, null=False)
-    keys_sequences = models.ManyToManyField(KeySequence)
-    
-    class Meta:
-        db_table = 'KeyGroups'
-    
-    def __str__(self):
-        return str(self.id) + str(self.name)
 
 
 class DoorsProMas(models.Model):

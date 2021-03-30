@@ -7,7 +7,7 @@ from django.conf import settings
 
 from rest_framework import serializers
 
-from key_door_finder.models import KeyQty, KeySequence, KeyRequest, KeyRequestQuantity, KeyRequestImage
+from key_door_finder.models import KeyQty, KeyGroup, KeySequence, KeyRequest, KeyRequestQuantity, KeyRequestImage
 from customer_dashboard.models import Audit
 
 
@@ -15,6 +15,16 @@ class KeySequenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = KeySequence
         fields = '__all__'
+class KeyGroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = KeyGroup
+        fields = '__all__'
+
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        query = KeySequence.objects.filter(group=instance.id)
+        response['sequence'] = KeySequenceSerializer(query, many=True).data
+        return response
 
 
 class KeyQtySerializer(serializers.ModelSerializer):

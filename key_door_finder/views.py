@@ -6,8 +6,8 @@ from rest_framework.pagination import LimitOffsetPagination
 from django.core.mail import send_mail
 from customer_dashboard.models import UserProfile
 from customer_dashboard.serializers import UserSerializer, FileNumberSerializer
-from key_door_finder.models import KeyQty, KeySequence
-from key_door_finder.serializers import KeyQtySerializer, EditKeySequenceSerializer, ActionKeySequenceSerializer, \
+from key_door_finder.models import KeyQty, KeySequence, KeyGroup
+from key_door_finder.serializers import KeyQtySerializer,KeyGroupSerializer, EditKeySequenceSerializer, ActionKeySequenceSerializer, \
     KeySequenceSerializer, KeyRequestSerializer, AllKeyQtySerializer
 from django.conf.global_settings import EMAIL_HOST_USER
 from django.conf import settings
@@ -62,6 +62,68 @@ class KeyQtyView(APIView, LimitOffsetPagination):
             }
             return Response(response)
 
+
+class KeyGroupsView(APIView, LimitOffsetPagination):
+    permission_classes = (IsAuthenticated,)
+    def get(self, request):
+        user_data = UserSerializer(request.user).data
+        current_user_info = {
+            'id': user_data['id'],
+            'first_name': user_data['first_name'],
+            'last_name': user_data['last_name'],
+            'last_login': user_data['last_login'],
+            'last_modified': user_data['last_modified']
+        }
+
+        key_groups = KeyGroup.objects.all()
+        keys = KeySequence.objects.filter(group=None)
+        results = self.paginate_queryset(key_groups, request, view=self)
+        serializer = KeyGroupSerializer(results, many=True)
+        response = {
+            'current_user': current_user_info,
+            'data': serializer.data,
+            'keys': KeySequenceSerializer(keys, many=True).data
+        }
+
+        return self.get_paginated_response(response)
+
+    def post(self, request):
+        kyes_ids = request.data.get('keys')
+        name = request.data.get('name')
+        user = request.data.get('user')
+        issue_date = request.data.get('issueDate')
+        key_group = KeyGroup.objects.create(name=name, issue_date=issue_date )
+        keys_sequences = KeySequence.objects.filter(pk__in=kyes_ids)
+        keys_sequences.update(group=key_group.id, key_holder=user)
+        return Response({'success': True})
+
+    def delete(self, request):
+        group_id = request.data.get('id')
+        KeyGroup.objects.filter(pk=group_id).delete()
+        return Response({'success': True})
+        
+class KeyGroupView(APIView):
+    permission_classes = (IsAuthenticated,)
+    
+    def post(self, request, id):
+        name = request.data.get('name')
+        user = request.data.get('user')
+        issue_date = request.data.get('issueDate')
+        key_group = KeyGroup.objects.filter(id=id)
+        key_group.update(name=name, issue_date=issue_date)
+        KeySequence.objects.filter(group=id).update(group=None, key_holder='')
+        keys_ids = request.data.get('keys')
+        keys_sequences = KeySequence.objects.filter(pk__in=keys_ids)
+        keys_sequences.update(group=key_group[0].id, key_holder=user)
+        return Response({'success': True})
+        
+class RemoveKeySequenceFromKeyGroup(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        id = request.data.get('id')
+        sequence = KeySequence.objects.filter(id=id).update(group=None, key_holder='')
+        return Response({'success': True})
 
 # for update key sequence table
 class KeySequenceView(APIView):
