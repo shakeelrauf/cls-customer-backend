@@ -28,7 +28,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', cast=bool, default=True)
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '10.100.67.52', '2b36a310257c.ngrok.io']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '10.100.67.52', '2b36a310257c.ngrok.io', 'customerportal.calgarylockandsafe.com']
 
 # Application definition
 INSTALLED_APPS = [
