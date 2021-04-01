@@ -15,6 +15,11 @@ class KeySequenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = KeySequence
         fields = '__all__'
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['name'] = str(instance)
+        return response
+
 class KeyGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = KeyGroup

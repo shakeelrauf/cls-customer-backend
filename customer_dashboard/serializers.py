@@ -373,6 +373,8 @@ class CustomLoginSerializer(TokenObtainPairSerializer):
         data['last_login'] = UserSerializer(self.user).data['last_login']
         data['last_modified'] = UserSerializer(self.user).data['last_modified']
         data['username'] = self.user.full_name()
+        data['email'] = self.user.email
+        data['phone'] = self.user.phone
         data['user_access'] = UserAccessSerializer(self.user.useraccess).data
         if self.user.is_active:
             self.user.last_login = datetime.datetime.now()

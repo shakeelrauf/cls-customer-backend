@@ -1,6 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.db.models.functions import Concat
+from django.db.models import Value, CharField, F
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import LimitOffsetPagination
 from django.core.mail import send_mail
@@ -62,6 +64,17 @@ class KeyQtyView(APIView, LimitOffsetPagination):
             }
             return Response(response)
 
+# when click on view keys (list of all keys of all file numbers which is assigned to user)
+class KeyJsonView(APIView, LimitOffsetPagination):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        user_data = UserSerializer(request.user).data
+        file_number_instance = request.user.userprofile.file_numbers.all()
+        queryset = KeySequence.objects.annotate(fullKey=Concat(F('key_id'), Value('-'), F('sequence'),output_field=CharField()) )
+        results = queryset.filter(fullKey__contains=request.query_params['keyCode'], group=None)[:10]
+        keys = KeySequenceSerializer(results, many=True).data
+        return Response({'data': keys})
 
 class KeyGroupsView(APIView, LimitOffsetPagination):
     permission_classes = (IsAuthenticated,)
@@ -76,13 +89,11 @@ class KeyGroupsView(APIView, LimitOffsetPagination):
         }
 
         key_groups = KeyGroup.objects.all()
-        keys = KeySequence.objects.filter(group=None)
         results = self.paginate_queryset(key_groups, request, view=self)
         serializer = KeyGroupSerializer(results, many=True)
         response = {
             'current_user': current_user_info,
             'data': serializer.data,
-            'keys': KeySequenceSerializer(keys, many=True).data
         }
 
         return self.get_paginated_response(response)

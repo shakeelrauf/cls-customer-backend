@@ -4,6 +4,7 @@ from key_door_finder import views
 urlpatterns = [
     # key quantity
     path('keys/', views.KeyQtyView.as_view(), name='view_keys'),
+    path('keysjson/', views.KeyJsonView.as_view(),name='keys_json'),
     path('keys/all/', views.AllKeyQuantityView.as_view(), name='all_keys'),
     # key groupings
     path('keysgroups/', views.KeyGroupsView.as_view(), name="view_key_groupings"),
