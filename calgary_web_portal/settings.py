@@ -28,7 +28,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', cast=bool, default=True)
 
-ALLOWED_HOSTS = ['http://localhost:3000','localhost', '127.0.0.1', '*','10.100.67.52', '2b36a310257c.ngrok.io']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '10.100.67.52', '2b36a310257c.ngrok.io', 'customerportal.calgarylockandsafe.com']
 
 # Application definition
 INSTALLED_APPS = [
@@ -100,6 +100,13 @@ DATABASES = {
     'default': {
         'ENGINE': config('CUSDB_ENGINE'),
         'NAME': config('CUSDB_NAME'),
+        'HOST': config('CUSDB_HOST'),
+        'USER': config('CUSDB_USER'),
+        'PASSWORD': config('CUSDB_PASSWORD'),
+        'OPTIONS': {
+            'driver': config('CUSDB_DRIVER'),
+            'unicode_results': config('CUSDB_UNICODE_RESULTS', cast=bool),
+        }
     },
     'esc': {
         'ENGINE': config('ESC_ENGINE'),
