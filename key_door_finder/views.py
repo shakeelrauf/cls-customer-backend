@@ -15,6 +15,7 @@ from django.conf.global_settings import EMAIL_HOST_USER
 from django.conf import settings
 import logging
 import pdfkit
+from django.db import connection
 import csv
 import sqlite3
 from django.http import HttpResponse
@@ -63,18 +64,29 @@ class KeyQtyView(APIView, LimitOffsetPagination):
                 'data': []
             }
             return Response(response)
-
 # when click on view keys (list of all keys of all file numbers which is assigned to user)
 class KeyJsonView(APIView, LimitOffsetPagination):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
-        user_data = UserSerializer(request.user).data
-        file_number_instance = request.user.userprofile.file_numbers.all()
-        queryset = KeySequence.objects.annotate(fullKey=Concat(F('key_id'), Value('-'), F('sequence'),output_field=CharField()) )
-        results = queryset.filter(fullKey__contains=request.query_params['keyCode'], group=None)[:10]
-        keys = KeySequenceSerializer(results, many=True).data
-        return Response({'data': keys})
+        cursor = connection.cursor()
+        sql_query = """WITH cte  AS ( SELECT id, file_number, key_id,sequence, key_holder, ROW_NUMBER() OVER(PARTITION BY key_id ORDER BY sequence) AS N  FROM KeySequence WHERE group_id IS NULL )  
+            SELECT *
+            FROM cte WHERE N = 1; """
+        #cursor.execute("""SELECT lc.id,lc.file_number, lc.key_id, lc.sequence, lc.key_holder, nc.* FROM KeySequence lc LEFT JOIN KeySequence nc ON lc.key_id = nc.key_id AND lc.id < nc.id WHERE nc.[id] IS NULL AND lc.[group_id] IS NULL""")
+        cursor.execute(sql_query)
+        res = cursor.fetchall()
+        results = []
+        for row in res:
+            sequence = {}
+            sequence['id'] = row[0]
+            sequence['file_number'] = row[1]
+            sequence['key_id'] = row[2]
+            sequence['sequence'] = row[3]
+            sequence['key_holder'] = row[4]
+            sequence['name'] = str(row[2]) + '-' + str(row[3])
+            results.append(sequence)
+        return Response({'data': results})
 
 class KeyGroupsView(APIView, LimitOffsetPagination):
     permission_classes = (IsAuthenticated,)

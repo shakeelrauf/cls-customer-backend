@@ -24,7 +24,7 @@ from customer_dashboard.serializers import CreateNewPrimaryUserSerializer, Chang
     AdditionalUserSerializer, UserAccessSerializer, UserSerializer, AuditSerializer, ToogleUserActiveSerializer, \
     FileNumberSerializer, CustomLoginSerializer, ResetPasswordSerializer
 from customer_dashboard.query import update_company_details, get_company_details, get_accounting, get_invoice_list, get_invoice, \
-    get_quotations, get_service_request, get_quotes, get_quotes_list, get_invoice_for_query, get_last_name, \
+    get_quotations,get_dispatch_parts, get_service_request,get_service_request_dispatches, get_quotes, get_quotes_list, get_invoice_for_query, get_last_name, \
     get_all_invoice_of_location, get_all_invoice, get_invoice_list_with_address
 from customer_dashboard.custom_exception import EmailNotMatchedException, PasswordException, NotFoundError, \
     ConnectionError, ESCDataNotFetchingError, OldPasswordNotMatched
@@ -88,7 +88,7 @@ class CreateNewPrimaryUserView(APIView):
                     image = MIMEImage(file)
                     image.add_header('Content-ID', '<logo.png>')
                     msg.attach(image)
-                    msg.send()
+                    # msg.send()
 
                     # send mail to calgary
                     subject = f"{request.data['account_number']} - {request.data['first_name']} {request.data['last_name']}"
@@ -1421,6 +1421,66 @@ class PayQuoteView(APIView):
 
 # --------------------------------------------------- SERVICE REQUEST ----------------------------------------------
 # Service Request
+class ServiceRequestDispatchesView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    # get list of location and address
+    def get(self, request, loc_no):
+        try:
+            cus_no = request.user.userprofile.account_number.account_number
+            data = get_service_request_dispatches(cus_no, loc_no)
+            data['email'] = request.user.email
+            return JsonResponse(data, safe=False)
+        except NotFoundError:
+            return JsonResponse({
+                'error': True,
+                'status': status.HTTP_404_NOT_FOUND,
+                'message': f'No record found for {cus_no} Account Number/Customer Number'
+            })
+        except ConnectionError:
+            logger.error(ESC_DATABASE_CONNECTION_ERROR)
+            return JsonResponse({
+                'error': True,
+                'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
+                'message': INTERNAL_SERVER_ERROR_500_MESSAGE
+            })
+        except ESCDataNotFetchingError:
+            return JsonResponse({
+                'error': True,
+                'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
+                'message': INTERNAL_SERVER_ERROR_500_MESSAGE
+            })
+
+class ServiceRequestDispatchView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    # get list of location and address
+    def get(self, request, dispatch_no):
+        try:
+            cus_no = request.user.userprofile.account_number.account_number
+            data = get_dispatch_parts(dispatch_no)
+            data['email'] = request.user.email
+            return JsonResponse(data, safe=False)
+        except NotFoundError:
+            return JsonResponse({
+                'error': True,
+                'status': status.HTTP_404_NOT_FOUND,
+                'message': f'No record found for {dispatch_no} Dispatch Number/dispatch Number'
+            })
+        except ConnectionError:
+            logger.error(ESC_DATABASE_CONNECTION_ERROR)
+            return JsonResponse({
+                'error': True,
+                'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
+                'message': INTERNAL_SERVER_ERROR_500_MESSAGE
+            })
+        except ESCDataNotFetchingError:
+            return JsonResponse({
+                'error': True,
+                'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
+                'message': INTERNAL_SERVER_ERROR_500_MESSAGE
+            })
+
 class ServiceRequestView(APIView):
     permission_classes = (IsAuthenticated,)
 
@@ -1523,6 +1583,7 @@ def invoice_pdf_view(request, cus_no, loc_no, invoice):
                 'data': data['data'],
                 'logo': settings.LOGO
             })
+            
             output = pdfkit.from_string(html, output_path=False)
             response = HttpResponse(content_type="application/pdf")
             response['Content-Disposition'] = 'attachment; filename="invoice.pdf"'
@@ -1549,7 +1610,8 @@ def all_invoice_pdf_view(request, cus_no):
                 'data': data,
                 'logo': settings.LOGO
             })
-            output = pdfkit.from_string(html, output_path=False)
+            config = pdfkit.configuration(wkhtmltopdf='C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe')
+            output = pdfkit.from_string(html, output_path=False, configuration=config)
             response = HttpResponse(content_type="application/pdf")
             response['Content-Disposition'] = 'attachment; filename="all_invoice.pdf"'
             response.write(output)

@@ -35,6 +35,8 @@ urlpatterns = [
 
     # service request
     path('service-request/', views.ServiceRequestView.as_view(), name='service_request'),
+    path('service-request/<str:loc_no>/dispatches/', views.ServiceRequestDispatchesView.as_view(), name='dispatches_service_request'),
+    path('service-request/dispatches/<str:dispatch_no>/', views.ServiceRequestDispatchView.as_view(), name='dispatches_service_request'),
 
     # file number naming
     path('file-numbers/', views.FileNumbersView.as_view(), name='file_numbers'),

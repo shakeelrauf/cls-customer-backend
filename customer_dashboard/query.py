@@ -16,6 +16,76 @@ def connect_to_server():
         print('Exception :', e)
     else:
         return conn
+# get data for dispatch details
+def get_dispatch_parts(dispatch_no):
+    con = connect_to_server()
+    if con:
+        try:
+            cursor = con.cursor()
+            data_dict = {}
+            query = f"""SELECT DispParts.[Prod],DispParts.[Desc],DispParts.[Quan] ,DispParts.[Price],DispParts.[Quan] *DispParts.[Price]  FROM DispParts WHERE DispParts.[Dispatch]='{dispatch_no}'"""
+            res = cursor.execute(query)
+            if res:
+                ret_data = res.fetchall()
+                con.close()
+                data = []
+                total_amount = 0
+
+                for d in ret_data:
+                    data.append({
+                        'parts': d[0],
+                        'desc': d[1],
+                        'quan': d[2],
+                        'price': d[3],
+                        'total': d[4]
+                    })
+                    total_amount  += d[4]
+                data_dict['data'] = data
+                data_dict['total'] = total_amount
+                return data_dict
+        except Exception as e:
+            logger.error('%s', e)
+            raise ESCDataNotFetchingError
+    else:
+        raise ConnectionError
+
+# to get data for dispatches agaiinst location
+def get_service_request_dispatches(cus_no,loc_no):
+    con = connect_to_server()
+    if con:
+        try:
+            cursor = con.cursor()
+            data_dict = {}
+            cust_query = f"""SELECT CustNo, LastName FROM Customer WHERE CustNo='{cus_no}'"""
+            cust_res = cursor.execute(cust_query).fetchone()
+            if cust_res:
+                data_dict['cus_no'] = cust_res[0]
+                data_dict['last_name'] = cust_res[1]
+                query = f"""SELECT Dispatch.[CustNo],Dispatch.[LocNo],Dispatch.[Dispatch] ,Dispatch.[RecDate],Dispatch.[PONum], Dispatch.[RecBy], Dispatch.[Calledinby] FROM Dispatch WHERE Dispatch.[LocNo]='{loc_no}' AND Dispatch.[CustNo]='{cus_no}'"""
+                res = cursor.execute(query)
+                if res:
+                    ret_data = res.fetchall()
+                    con.close()
+                    data = []
+                    for d in ret_data:
+                        data.append({
+                            'cus_no': d[0],
+                            'loc_no': d[1],
+                            'dispatch_no': d[2],
+                            'dispatch_en_date': d[3],
+                            "po_no": d[4],
+                            "dispatcher_name": d[5],
+                            "requester": d[6]
+                        })
+                    data_dict['data'] = data
+                    return data_dict
+            else:
+                raise NotFoundError
+        except Exception as e:
+            logger.error('%s', e)
+            raise ESCDataNotFetchingError
+    else:
+        raise ConnectionError
 
 
 # get data for company details API
@@ -104,7 +174,7 @@ def get_accounting(cus_no):
                         
                         #invoice_query = f"""SELECT SUM(CAST((Sales.AmtCharge+Sales.AmtCash+Sales.AmtCheck+Sales.AmtCreditC-Sales.AmtChng) AS DECIMAL(12,2))) FROM Sales  LEFT JOIN Receivab ON Sales.CustNo = Receivab.CustNo and Sales.Invoice = Receivab.Invoice WHERE Sales.CustNo='{cus_no}'
                             #                AND Sales.LocNo='{d[0]}' AND Receivab.PaidOff IS NULL"""
-                        invoice_query = f"""SELECT SUM(CAST((InvAmt - Paid) AS DECIMAL(12,2)))  FROM Receivab WHERE LocNo='{d[0]}' AND CustNo='{cus_no}'"""
+                        invoice_query = f"""SELECT SUM(CAST((InvAmt - Paid) AS DECIMAL(12,2)))  FROM Receivab WHERE LocNo='{d[0]}' AND CustNo='{cus_no}' AND PaidOff Is NULL"""
                         #invoice_query = f"""SELECT SUM([Invoice Total]) FROM dbo.ViewListInvoices WHERE Customer='{cus_no}' 
                                           #  AND Location='{d[0]}' AND [Paid Off Date] IS NULL"""
                         amount = cursor.execute(invoice_query).fetchone()[0]
@@ -129,11 +199,11 @@ def get_accounting(cus_no):
                       #  WHERE Customer='{cus_no}' AND [Paid Off Date] IS NULL"""
                
                 dues_query = f"""SELECT
-                        SUM(CASE WHEN DATEDIFF(day,CONVERT(datetime,(Period+'01')), GETDATE())<=30 THEN CAST((InvAmt - Period) AS DECIMAL(12,2)) ELSE 0 END),
-                        SUM(CASE WHEN DATEDIFF(day,CONVERT(datetime,(Period+'01')), GETDATE())>30 AND DATEDIFF(day,CONVERT(datetime,(Period+'01')), GETDATE())<=60 THEN CAST((InvAmt - Period) AS DECIMAL(12,2)) ELSE 0 END),
-                        SUM(CASE WHEN DATEDIFF(day,CONVERT(datetime,(Period+'01')), GETDATE())>60 THEN CAST((InvAmt -  Period) AS DECIMAL(12,2)) ELSE 0 END)
+                        SUM(CASE WHEN DATEDIFF(day,InvDate, GETDATE())<=30 THEN CAST((InvAmt - Paid) AS DECIMAL(12,2)) ELSE 0 END),
+                        SUM(CASE WHEN DATEDIFF(day,InvDate, GETDATE())>30 AND DATEDIFF(day,InvDate, GETDATE())<=60 THEN CAST((InvAmt - Paid) AS DECIMAL(12,2)) ELSE 0 END),
+                        SUM(CASE WHEN DATEDIFF(day,InvDate, GETDATE())>60 THEN CAST((InvAmt -  Paid) AS DECIMAL(12,2)) ELSE 0 END)
                         FROM Receivab 
-                        WHERE CustNo='{cus_no}' """    
+                        WHERE CustNo='{cus_no}' AND PaidOff Is NULL """    
                 dues = cursor.execute(dues_query).fetchone()
                 data_dict['over_30'] = dues[0]
                 data_dict['over_60'] = dues[1]
