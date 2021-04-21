@@ -1610,8 +1610,7 @@ def all_invoice_pdf_view(request, cus_no):
                 'data': data,
                 'logo': settings.LOGO
             })
-            config = pdfkit.configuration(wkhtmltopdf='C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe')
-            output = pdfkit.from_string(html, output_path=False, configuration=config)
+            output = pdfkit.from_string(html, output_path=False)
             response = HttpResponse(content_type="application/pdf")
             response['Content-Disposition'] = 'attachment; filename="all_invoice.pdf"'
             response.write(output)

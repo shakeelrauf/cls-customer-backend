@@ -1,6 +1,8 @@
 from django.db import models
 from django.conf import settings
+from customer_dashboard.models import User
 
+import random, string
 
 # Create your models here.
 class KeyQty(models.Model):
@@ -26,12 +28,31 @@ class KeyQty(models.Model):
 class KeyGroup(models.Model):
     name = models.CharField(max_length=255, null=False)
     issue_date = models.DateTimeField(null=True)
+
     class Meta:
         db_table = 'KeyGroups'
     
     def __str__(self):
         return str(self.id) + str(self.name)
 
+class KeyAuditReport(models.Model):
+    run_at =  models.DateTimeField(null=True, blank=True, max_length=255)
+    created_by =  models.ForeignKey(to=User, null=True , blank=True,on_delete=models.SET_NULL)
+    audit_type = models.CharField(max_length=255, null=True, blank=True)
+    confirm = models.BooleanField(default=False, null=True, blank=True)
+    confirmed_at =  models.DateTimeField(null=True, blank=True, max_length=255)
+    url = models.CharField(max_length=255, null=True, blank=True)
+
+    def generate_url(self):
+        self.url = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(16))
+        return self.url
+    
+    def save(self, *args, **kwargs):
+        url = self.generate_url()
+        if KeyAuditReport.objects.filter(url=url):
+            self.save()
+        else:
+            super(KeyAuditReport, self).save(*args, **kwargs)
 
 class KeySequence(models.Model):
     file_number = models.CharField(max_length=255, null=True, blank=True)
@@ -45,6 +66,7 @@ class KeySequence(models.Model):
     lost_key = models.BooleanField(default=False, null=True, blank=True)
     broken_key = models.BooleanField(default=False, null=True, blank=True)
     group = models.ForeignKey(to=KeyGroup,null=True, on_delete=models.SET_NULL)
+    audit_report = models.ForeignKey(to=KeyAuditReport,null=True, on_delete=models.SET_NULL)
     class Meta:
         db_table = 'KeySequence'
 

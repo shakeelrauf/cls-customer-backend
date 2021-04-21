@@ -6,9 +6,13 @@ from django.db.models import Value, CharField, F
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import LimitOffsetPagination
 from django.core.mail import send_mail
+from datetime import datetime
+from rest_framework.decorators import api_view, renderer_classes
+
+from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from customer_dashboard.models import UserProfile
 from customer_dashboard.serializers import UserSerializer, FileNumberSerializer
-from key_door_finder.models import KeyQty, KeySequence, KeyGroup
+from key_door_finder.models import KeyQty, KeySequence, KeyGroup, KeyAuditReport
 from key_door_finder.serializers import KeyQtySerializer,KeyGroupSerializer, EditKeySequenceSerializer, ActionKeySequenceSerializer, \
     KeySequenceSerializer, KeyRequestSerializer, AllKeyQtySerializer
 from django.conf.global_settings import EMAIL_HOST_USER
@@ -23,6 +27,8 @@ from django.db.models import Q
 from django.template.loader import render_to_string
 import pdb
 import json
+from decouple import config
+
 logger = logging.getLogger(__name__)
 NO_PERMISSOIN_MANAGE_KEYS_MESSAGE = 'You have no permission for manage keys'
 
@@ -88,6 +94,89 @@ class KeyJsonView(APIView, LimitOffsetPagination):
             results.append(sequence)
         return Response({'data': results})
 
+class AllKeyGroupJSONView(APIView):
+    permission_classes = (IsAuthenticated,)
+    def get(self, request):
+        key_groups = KeyGroup.objects.all()
+        serializer = KeyGroupSerializer(key_groups, many=True)
+        response = {
+            'data': serializer.data,
+        }
+        return Response(response)
+    
+    def post(self, request):
+        keys = request.data.get('groups')
+        sequences = KeySequence.objects.filter(Q(group__in=keys))
+        response =  send_confirmation_to_keys_owners(sequences, request, "key")
+        return Response(response)
+
+def send_confirmation_to_keys_owners(sequences, request, audit_type):
+    format_data = {}
+    for seq in sequences:
+        if format_data.get(seq.email):
+            format_data[seq.email]['sequences'].append(seq)
+            format_data[seq.email]['sequence_ids'].append(seq.id)
+        else:
+            format_data[seq.email] = {}
+            format_data[seq.email]['sequences'] = [seq]
+            format_data[seq.email]['sequence_ids'] = [seq.id]
+            format_data[seq.email]['name'] = seq.key_holder
+    for email, values in format_data.items():
+        report =  KeyAuditReport.objects.create(run_at=datetime.now(),created_by=request.user,audit_type=audit_type)
+        KeySequence.objects.filter(id__in=values['sequence_ids']).update(audit_report=report.id) 
+        send_mail(
+            "Key audit",
+            f"Audit of Key(s) by {request.user.full_name()}",
+            request.user.email,
+            [email],
+            html_message=render_to_string(
+                'email/key_audit_confirmation.html',
+                {
+                    'data': values['sequences'],
+                    'name': values.get('name'), 
+                    'url':  config('APP_BASE_URL') + "/KeyAudit/"+report.url
+                }
+            )
+        )
+    response = {'success': True, 'status': status.HTTP_200_OK}
+    return response
+    
+    
+@api_view(('GET',))
+@renderer_classes((TemplateHTMLRenderer, JSONRenderer))
+def get_report_sequences(request, id):
+    if request.method == 'GET':
+        keyreport = KeyAuditReport.objects.get(url=id)
+        if keyreport:
+            if keyreport.confirm == False:
+                keys = KeySequence.objects.filter(audit_report__id=keyreport.id)
+                if len(keys) > 0:
+                    response = {
+                        'data' : KeySequenceSerializer(keys, many=True).data,
+                        'success': True,
+                        'status': status.HTTP_200_OK
+                    }
+                    return Response(response)
+                else: 
+                    keyreport.delete()
+    return Response({'success': False})
+
+class SelectKeySequencesJSONView(APIView):
+    permission_classes = (IsAuthenticated,)
+    def get(self, request):
+        key_seqs = KeySequence.objects.filter((~Q(email='') & ~Q(email=None)) | (~Q(phone='') & ~Q(phone=None)))
+        serializer = KeySequenceSerializer(key_seqs, many=True)
+        response = {
+            'data': serializer.data,
+        }
+        return Response(response)
+
+    def post(self, request):
+        keys = request.data.get('keys')
+        sequences = KeySequence.objects.filter(Q(id__in=keys))
+        response =  send_confirmation_to_keys_owners(sequences, request, "group")
+        return Response(response)
+
 class KeyGroupsView(APIView, LimitOffsetPagination):
     permission_classes = (IsAuthenticated,)
     def get(self, request):
@@ -99,7 +188,6 @@ class KeyGroupsView(APIView, LimitOffsetPagination):
             'last_login': user_data['last_login'],
             'last_modified': user_data['last_modified']
         }
-
         key_groups = KeyGroup.objects.all()
         results = self.paginate_queryset(key_groups, request, view=self)
         serializer = KeyGroupSerializer(results, many=True)
@@ -114,14 +202,18 @@ class KeyGroupsView(APIView, LimitOffsetPagination):
         kyes_ids = request.data.get('keys')
         name = request.data.get('name')
         user = request.data.get('user')
+        email = request.data.get('email')
+        phone_no = request.data.get('phone_no')
+        tenant = request.data.get('tenant')
         issue_date = request.data.get('issueDate')
-        key_group = KeyGroup.objects.create(name=name, issue_date=issue_date )
+        key_group = KeyGroup.objects.create(name=name, issue_date=issue_date)
         keys_sequences = KeySequence.objects.filter(pk__in=kyes_ids)
-        keys_sequences.update(group=key_group.id, key_holder=user)
+        keys_sequences.update(group=key_group.id,key_holder=user, tenant_location=tenant,date_issued=datetime.strptime(issue_date,"%Y-%m-%dT%H:%M:%S.%fZ"),email=email, phone=phone_no)
         return Response({'success': True})
 
     def delete(self, request):
         group_id = request.data.get('id')
+        KeySequence.objects.filter(group=group_id).update(group=None, key_holder='', tenant_location='',date_issued=None,email='', phone='')
         KeyGroup.objects.filter(pk=group_id).delete()
         return Response({'success': True})
         
@@ -132,12 +224,15 @@ class KeyGroupView(APIView):
         name = request.data.get('name')
         user = request.data.get('user')
         issue_date = request.data.get('issueDate')
+        email = request.data.get('email')
+        phone_no = request.data.get('phone_no')
+        tenant = request.data.get('tenant')
         key_group = KeyGroup.objects.filter(id=id)
-        key_group.update(name=name, issue_date=issue_date)
-        KeySequence.objects.filter(group=id).update(group=None, key_holder='')
+        key_group.update(name=name)
+        KeySequence.objects.filter(group=id).update(group=None, key_holder='', tenant_location='',date_issued=None,email='', phone='')
         keys_ids = request.data.get('keys')
         keys_sequences = KeySequence.objects.filter(pk__in=keys_ids)
-        keys_sequences.update(group=key_group[0].id, key_holder=user)
+        keys_sequences.update(group=key_group[0].id, key_holder=user, tenant_location=tenant,date_issued=datetime.strptime(issue_date,"%Y-%m-%dT%H:%M:%S.%fZ"),email=email, phone=phone_no)
         return Response({'success': True})
         
 class RemoveKeySequenceFromKeyGroup(APIView):
@@ -145,8 +240,13 @@ class RemoveKeySequenceFromKeyGroup(APIView):
 
     def post(self, request):
         id = request.data.get('id')
+        group_id = request.data.get('group_id')
         sequence = KeySequence.objects.filter(id=id).update(group=None, key_holder='')
-        return Response({'success': True})
+        delete_group = False
+        if len(KeySequence.objects.filter(group=group_id)) == 0:
+            KeyGroup.objects.filter(id=group_id).delete()
+            delete_group = True
+        return Response({'success': True, 'delete': delete_group})
 
 # for update key sequence table
 class KeySequenceView(APIView):

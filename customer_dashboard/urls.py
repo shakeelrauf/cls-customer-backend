@@ -55,4 +55,7 @@ urlpatterns = [
     # download invoice pdf
     path('pdf/invoice/<str:cus_no>/<str:loc_no>/<str:invoice>/', views.invoice_pdf_view, name='invoice'),
     path('pdf/all/invoice/<str:cus_no>/', views.all_invoice_pdf_view, name='all_invoice'),
+
+
+
 ]

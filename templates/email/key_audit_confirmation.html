@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            .indiv {margin-left: 35px; margin-top: 30px; align-items: center;}
+            label {display: inline-block;
+                    width: 140px;
+                    text-align: left;
+                    font-size: 14px;
+                    }
+             label.lab {
+                display: inline-block;
+                    width: 15px;
+                    text-align: left;
+                    font-size: 14px;
+             }
+             p.denied {
+                font-size: 12px;
+                padding-left: 80px;
+             }
+             p.denied1 {
+                font-size: 12px;
+                padding-left: 50px;
+             }
+             .vl {
+                border-left: 1px solid ;
+                height: 35px;
+                margin-left: 10px;
+                padding-right: 15px;
+                }
+                .contact {
+                    padding: 0;
+                    margin: 0;
+                }
+
+             span{ font-size: 12px;}
+             h1{ font-size: 14px;}
+        </style>
+    </head>
+    <body>
+        <div class="div">
+            <div class="indiv">
+                <p>
+                    Hello {{name}}, 
+                </p>
+                <p>
+                    Please confirm you have all the keys on Security Ring:
+                </p>
+                <p>-------------------------------------------------</p>
+                {% for key in data %}
+                    <p><span class="vl"></span>{{key.key_id}}-{{key.sequence}}</p>
+                {% endfor %}
+                <p>-------------------------------------------------</p><br>
+                <a href="{{url}}">
+                    Click Here to confirm </a>
+
+                <p>-------------------------------------------------</p><br>
+
+                <p class="contact">If you have any questions, please contact us at:</p>
+                <span>444-358-755</span><br>
+                <span>keyrecords@calagoryandsafe.com</span><br>
+                <span>www.calgoryandsafe.com</span>
+
+            </div>
+        </div>
+    </body>
+</html>
